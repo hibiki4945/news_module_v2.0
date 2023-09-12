@@ -1,4 +1,4 @@
-package com.example.news_module_v20;
+package com.example.news_module;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
