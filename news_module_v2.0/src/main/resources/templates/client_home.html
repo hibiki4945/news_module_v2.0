@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://cdn.tailwindcss.com"></script>
-<title>Home Page</title>
+<title>Client Home Page</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-slate-400">
@@ -13,48 +13,31 @@
 		    <span class="text-2xl font-bold mr-48">最新消息模組</span>
 			<div class="absolute top-1 right-1">
 				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="absolute w-full h-full left-0 top-0" href="/news_add">New News</a>
-			    </button>
-				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="absolute w-full h-full left-0 top-0" href="/client_home">切換成'客戶端'</a>
+			    	<a class="absolute w-full h-full left-0 top-0" href="/home">切換成'管理端'</a>
 			    </button>
 		    	<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
 			    	<i class="fa-solid fa-house">
-			    		<a class="absolute w-full h-full left-0 top-0" href="/home"></a>
+			    		<a class="absolute w-full h-full left-0 top-0" href="/client_home"></a>
 			    	</i>
 		    	</button>
-		    	<br/>
-				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="absolute w-full h-full left-0 top-0" href="/category_home">分類</a>
-			    </button>
-				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="absolute w-full h-full left-0 top-0" href="/sub_category_home">子分類</a>
-			    </button>
 	    	</div>
 		</header>
 	    <h1 class="text-3xl font-bold underline">
 	      最新消息:
 	    </h1>
-	    <form action="#" th:action="@{/home}" method="post" class="h-screen">
-			
-			<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-		    	<a class="absolute w-full h-full left-0 top-0" href="/news_edit">Edit News</a>
-		    </button>
-		    
+	    <form action="#" th:action="@{/client_home}" method="post" class="h-screen">
 			<table>
 				<tr>
-					<td th:text="id" class="border border-2 border-black bg-slate-"></td>
 					<td th:text="分類" class="border border-2 border-black bg-slate-"></td>
 					<td th:text="子分類" class="border border-2 border-black"></td>
 					<td th:text="新聞標題" class="border border-2 border-black"></td>
 					<td th:text="新聞副標題" class="border border-2 border-black"></td>
 					<td th:text="發布時間" class="border border-2 border-black"></td>
-					<td th:text="創建時間" class="border border-2 border-black"></td>
 				</tr>
 			</table>
 			
 	    <button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-	    	<a class="absolute w-full h-full left-0 top-0" href="/content">content</a>
+	    	<a class="absolute w-full h-full left-0 top-0" href="/client_content">client_content</a>
 	    </button>
     	
 		</form>
