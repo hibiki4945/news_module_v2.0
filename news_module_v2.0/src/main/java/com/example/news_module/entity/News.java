@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "news")
 public class News {
@@ -32,7 +34,7 @@ public class News {
     private String content;
     
     @Column(name = "build_time")
-    private String buildTime;
+    private Date buildTime;
 
     public int getId() {
         return id;
@@ -90,15 +92,15 @@ public class News {
         this.content = content;
     }
 
-    public String getBuildTime() {
+    public Date getBuildTime() {
         return buildTime;
     }
 
-    public void setBuildTime(String buildTime) {
+    public void setBuildTime(Date buildTime) {
         this.buildTime = buildTime;
     }
 
-    public News(int id, String category, String subCategory, String newsTitle, String newsSubTitle, String releaseTime, String content, String buildTime) {
+    public News(int id, String category, String subCategory, String newsTitle, String newsSubTitle, String releaseTime, String content, Date buildTime) {
         super();
         this.id = id;
         this.category = category;
@@ -110,9 +112,25 @@ public class News {
         this.buildTime = buildTime;
     }
 
+    public News(String category, String subCategory, String newsTitle, String newsSubTitle, String releaseTime, String content) {
+        super();
+        this.category = category;
+        this.subCategory = subCategory;
+        this.newsTitle = newsTitle;
+        this.newsSubTitle = newsSubTitle;
+        this.releaseTime = releaseTime;
+        this.content = content;
+    }
+
     public News() {
         super();
         // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public String toString() {
+        return "News [id=" + id + ", category=" + category + ", subCategory=" + subCategory + ", newsTitle=" + newsTitle + ", newsSubTitle=" + newsSubTitle + ", releaseTime="
+               + releaseTime + ", content=" + content + ", buildTime=" + buildTime + "]";
     }
     
 }

@@ -1,4 +1,4 @@
-package com.example.news_module_v20;
+package com.example.news_module;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

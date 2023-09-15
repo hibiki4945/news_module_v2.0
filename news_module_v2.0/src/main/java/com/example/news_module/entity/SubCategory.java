@@ -66,5 +66,10 @@ public class SubCategory {
         super();
         // TODO Auto-generated constructor stub
     }
+
+    @Override
+    public String toString() {
+        return "SubCategory [subCategory=" + subCategory + ", subCategoryNewsCount=" + subCategoryNewsCount + ", category=" + category + ", buildTime=" + buildTime + "]";
+    }
     
 }
