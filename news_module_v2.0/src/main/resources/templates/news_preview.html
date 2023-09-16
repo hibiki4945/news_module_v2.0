@@ -26,12 +26,32 @@
 	      最新消息:
 	    </h1>
 	    <form action="#" th:action="@{/news_preview}" method="post" th:object="${news}" class="mb-12">
-			<button class="fixed w-12 h-12 left-72 top-0 rounded-full bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-		    	<a class="w-full h-full text-white" href="/home">確認提交</a>
+			<div th:object="${error}">
+			  <span th:text="${error}" class="text-red-900"></span>
+	        </div>
+			<button type="submit" class="fixed w-12 h-12 left-72 top-0 rounded-full bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative text-white">
+		    	確認提交
 		    </button>
-			<hr class="mb-36" />
-			(記得加 搜尋結果的 展示格式)
-         	<hr/>
+			<hr class="my-4" />
+			客戶端的'搜尋'預覽 : 
+			<table>
+				<tr>
+					<td th:text="分類" class="border border-2 border-black bg-slate-600 text-white"></td>
+					<td th:text="子分類" class="border border-2 border-black bg-slate-600 text-white"></td>
+					<td th:text="新聞標題" class="border border-2 border-black bg-slate-600 text-white"></td>
+					<td th:text="新聞副標題" class="border border-2 border-black bg-slate-600 text-white"></td>
+					<td th:text="發佈時間" class="border border-2 border-black bg-slate-600 text-white"></td>
+				</tr>
+				<tr>
+					<td th:text="*{category}" class="border border-2 border-black bg-slate-"></td>
+					<td th:text="*{subCategory}" class="border border-2 border-black bg-slate-"></td>
+					<td th:text="*{newsTitle}" class="border border-2 border-black"></td>
+					<td th:text="*{newsSubTitle}" class="border border-2 border-black"></td>
+					<td th:text="*{releaseTime}" class="border border-2 border-black"></td>
+				</tr>
+			</table>
+			<hr class="my-4" />
+			客戶端的'詳細內容'預覽 : 
          	<div class="justify-around ml-24">
 	         	<div class="flex">
 					<div class="text-center text-lg mt-0 relative">

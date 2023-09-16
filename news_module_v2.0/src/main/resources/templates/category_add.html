@@ -22,10 +22,26 @@
 	    <h1 class="text-3xl font-bold underline">
 	      最新消息:
 	    </h1>
-	    <form action="#" th:action="@{/category_add}" method="post" class="h-screen">
-			<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-		    	<a class="absolute w-full h-full left-0 top-0" href="/category_home">提交</a>
+	    <form action="#" th:action="@{/category_add}" method="post" th:object="${category}" class="h-screen">
+			<div th:object="${error}">
+			  <span th:text="${error}" class="text-red-900"></span>
+	        </div>
+			<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
+		    	提交
 	    	</button>
+	    	
+         	<div class="justify-around">
+	         	<div class="flex">
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-48 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">分類:</label>
+						</div>
+						<div class="w-48 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{category}" /><br/>
+						</div>
+					</div>
+	         	</div>
+         	</div>
 		</form>
 		
 	    <footer class="py-8 bg-gray-200">

@@ -1,11 +1,13 @@
 package com.example.news_module.service.impl;
 
 import com.example.news_module.constants.RtnCode;
+import com.example.news_module.entity.Category;
 import com.example.news_module.entity.News;
 import com.example.news_module.repository.CategoryDao;
 import com.example.news_module.repository.NewsDao;
 import com.example.news_module.repository.SubCategoryDao;
 import com.example.news_module.service.ifs.MainService;
+import com.example.news_module.vo.CategoryAddResponse;
 import com.example.news_module.vo.NewsAddResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class MainServiceImpl implements MainService{
     private SubCategoryDao subCategoryDao;
     
     @Override
-    public NewsAddResponse newsAdd(News news) {
+    public NewsAddResponse newsAddCheck(News news) {
         
 //      判斷'資料'是否為空
         if(news == null) {
@@ -73,16 +75,58 @@ public class MainServiceImpl implements MainService{
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.NEWS_EXISTS_ERROR.getCode(), RtnCode.NEWS_EXISTS_ERROR.getMessage(), null);
         }
+        return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), news);
+        
+    }
+
+    @Override
+    public NewsAddResponse newsAdd(NewsAddResponse newsAddResponse) {
+
+
+        if(!newsAddResponse.getCode().matches("200")) {
+            return new NewsAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
+        }
         try {
 //          將 新聞資料(news) 存到資料庫
-            News res = newsDao.save(news);
+            News res = newsDao.save(newsAddResponse.getNews());
 //          返回(NewsAddResponse型別)訊息
-            return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), news);
+            return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
         } catch (Exception e) {
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
         }
-        
     }
 
+    @Override
+    public CategoryAddResponse categoryAdd(Category category) {
+        
+//      判斷'資料'是否為空
+        if(category == null) {
+//          返回(CategoryAddResponse型別)訊息
+            return new CategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'分類'是否為空
+        if(category.getCategory() == null || category.getCategory().isBlank()) {
+//          返回(CategoryAddResponse型別)訊息
+            return new CategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'分類'是否已存在
+        if(categoryDao.existsById(category.getCategory())) {
+//          返回(CategoryAddResponse型別)訊息
+            return new CategoryAddResponse(RtnCode.CATEGORY_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_EXISTS_ERROR.getMessage(), null);
+        }
+        
+//      取得 當前時間
+        Date date = new Date();
+//      將 date 設定到 news的BuildTime
+        category.setBuildTime(date);
+        
+        category.setNewsCount(0);
+
+        Category res = categoryDao.save(category);
+        
+        return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), res);
+        
+    }
+    
 }

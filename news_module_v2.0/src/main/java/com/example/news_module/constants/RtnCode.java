@@ -11,8 +11,9 @@ public enum RtnCode {
     RELEASE_TIME_FORMAT_ERROR("400", "release time format error!"),
     CONTENT_EMPTY_ERROR("400", "content empty error!"),
     NEWS_EXISTS_ERROR("400", "news exists error!"),
-    DAO_ERROR("400", "dao error"),
-    DATA_ERROR("400", "data error");
+    DAO_ERROR("400", "dao error!"),
+    DATA_ERROR("400", "data error!"),
+    CATEGORY_EXISTS_ERROR("400", "category exists error!");
     
     private String code;
     

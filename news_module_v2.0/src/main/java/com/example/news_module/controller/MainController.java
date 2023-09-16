@@ -1,7 +1,9 @@
 package com.example.news_module.controller;
 
+import com.example.news_module.entity.Category;
 import com.example.news_module.entity.News;
 import com.example.news_module.service.ifs.MainService;
+import com.example.news_module.vo.CategoryAddResponse;
 import com.example.news_module.vo.NewsAddResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
+    
+//  newsAddCheck的回傳結果的暫存資料
+    private NewsAddResponse newsAddCheckData;
     
     @Autowired
     private MainService mainService;
@@ -56,12 +61,13 @@ public class MainController {
     public String NewsAdd(@ModelAttribute("news") News news, Model model) {
 //        System.out.println("123");
         System.out.println(news);
-        NewsAddResponse res = mainService.newsAdd(news);
+        NewsAddResponse res = mainService.newsAddCheck(news);
         if(res.getCode() != "200") {
             System.out.println(res.getMessage());
             model.addAttribute("error", res.getMessage());
             return "news_add";
         }
+        newsAddCheckData = res;
         return "news_preview";
     }
     
@@ -71,10 +77,33 @@ public class MainController {
         return "news_edit";
     }
     
-    @RequestMapping(value = "/news_preview")
-    public String NewsPreview(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+//    @RequestMapping(value = "/news_preview")
+//    public String NewsPreview(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+//        
+//        return "news_preview";
+//    }
 
-        return "news_preview";
+    @PostMapping("/news_preview")
+    public String NewsPreview(Model model) {
+//        System.out.println("123");
+//        System.out.println(news);
+//        NewsAddResponse res = mainService.newsAddCheck(news);
+        if(newsAddCheckData.getCode() != "200") {
+            System.out.println(newsAddCheckData.getMessage());
+            model.addAttribute("error", newsAddCheckData.getMessage());
+            return "news_preview";
+        }
+
+        newsAddCheckData = mainService.newsAdd(newsAddCheckData);
+
+        if(newsAddCheckData.getCode() != "200") {
+            System.out.println(newsAddCheckData.getMessage());
+            model.addAttribute("error", newsAddCheckData.getMessage());
+            return "news_preview";
+        }
+
+        newsAddCheckData = null;
+        return "home";
     }
     
     @RequestMapping(value = "/category_home")
@@ -86,7 +115,25 @@ public class MainController {
     @RequestMapping(value = "/category_add")
     public String categoryAdd(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
 
+        Category category = new Category();
+        model.addAttribute("category", category);
+        model.addAttribute("error", "");
+        
         return "category_add";
+        
+    }
+
+    @PostMapping("/category_add")
+    public String CategoryAdd(@ModelAttribute("category") Category category, Model model) {
+//        System.out.println("123");
+        System.out.println(category);
+        CategoryAddResponse res = mainService.categoryAdd(category);
+        if(res.getCode() != "200") {
+            System.out.println(res.getMessage());
+            model.addAttribute("error", res.getMessage());
+            return "category_add";
+        }
+        return "category_home";
     }
     
     @RequestMapping(value = "/category_edit")
