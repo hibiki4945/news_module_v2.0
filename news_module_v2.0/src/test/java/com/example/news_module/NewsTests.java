@@ -74,6 +74,16 @@ public class NewsTests {
         res = mainService.newsAddCheck(news);
         Assert.isTrue(res.getMessage().equals(RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage()), "Failed!(測試3-1)");
 
+//      測試3.5 : 判斷'新聞標題'是否超過長度上限(100)
+        String testStr = "";
+        for(int i = 0; i <= 100; i++) {
+            testStr += "!";
+        }
+        news = new News("demo_category", "demo_subCategory", testStr, "demo_newsSubTitle", "1999-01-01", "demo_content");
+//      呼叫mainService的newsAdd方法
+        res = mainService.newsAddCheck(news);
+        Assert.isTrue(res.getMessage().equals(RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getMessage()), "Failed!(測試3.5)"+res.getMessage());
+ 
 //      測試4 : 判斷'新聞副標題'是否為空(null)
 //      新增1個News型別的變數(news)
         news = new News("demo_category", "demo_subCategory", "demo_newsTitle", null, "1999-01-01", "demo_content");
@@ -88,6 +98,16 @@ public class NewsTests {
         res = mainService.newsAddCheck(news);
         Assert.isTrue(res.getMessage().equals(RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getMessage()), "Failed!(測試4-1)");
 
+//      測試4.5 : 判斷'新聞副標題'是否超過長度上限(20)
+        testStr = "";
+        for(int i = 0; i <= 20; i++) {
+            testStr += "!";
+        }
+        news = new News("demo_category", "demo_subCategory", "demo_newsTitle", testStr, "1999-01-01", "demo_content");
+//      呼叫mainService的newsAdd方法
+        res = mainService.newsAddCheck(news);
+        Assert.isTrue(res.getMessage().equals(RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getMessage()), "Failed!(測試4.5)");
+        
 //      測試5 : 判斷'發布時間'是否格式錯誤
 //      新增1個News型別的變數(news)
         news = new News("demo_category", "demo_subCategory", "demo_newsTitle", "demo_newsSubTitle", "1999-01-010", "demo_content");
@@ -109,6 +129,16 @@ public class NewsTests {
         res = mainService.newsAddCheck(news);
         Assert.isTrue(res.getMessage().equals(RtnCode.CONTENT_EMPTY_ERROR.getMessage()), "Failed!(測試6-1)");
 
+//      測試6.5 : 判斷'內文'是否超過長度上限(1000)
+        testStr = "";
+        for(int i = 0; i <= 1000; i++) {
+            testStr += "!";
+        }
+        news = new News("demo_category", "demo_subCategory", "demo_newsTitle", "demo_newsSubTitle", "1999-01-01", testStr);
+//      呼叫mainService的newsAdd方法
+        res = mainService.newsAddCheck(news);
+        Assert.isTrue(res.getMessage().equals(RtnCode.CONTENT_OVER_LENGTH_ERROR.getMessage()), "Failed!(測試6.5)");
+        
 //      測試7 : 將 新聞資料(news) 存到資料庫
 //      新增1個News型別的變數(news)
         news = new News("demo_category", "demo_subCategory", "demo_newsTitle", "demo_newsSubTitle", "1999-01-01", "demo_content");

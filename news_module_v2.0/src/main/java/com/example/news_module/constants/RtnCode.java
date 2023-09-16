@@ -15,7 +15,12 @@ public enum RtnCode {
     DATA_ERROR("400", "data error!"),
     CATEGORY_EXISTS_ERROR("400", "category exists error!"),
     SUB_CATEGORY_EXISTS_ERROR("400", "sub category exists error!"),
-    CATEGORY_NOT_EXISTS_ERROR("400", "category not exists error!");
+    CATEGORY_NOT_EXISTS_ERROR("400", "category not exists error!"),
+    NEWS_TITLE_OVER_LENGTH_ERROR("400", "news title over length error!"),
+    NEWS_SUB_TITLE_OVER_LENGTH_ERROR("400", "news sub title over length error!"),
+    CONTENT_OVER_LENGTH_ERROR("400", "content over length error!"),
+    CATEGORY_OVER_LENGTH_ERROR("400", "category over length error!"),
+    SUB_CATEGORY_OVER_LENGTH_ERROR("400", "sub category over length error!");
     
     private String code;
     

@@ -63,6 +63,16 @@ public class SubCategoryTests {
         res = mainService.subCategoryAdd(subCategory);
         Assert.isTrue(res.getMessage().equals(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage()), "Failed!(測試3-1)");
 
+//      測試3.5 : 判斷'子分類'是否超過長度上限(20)
+        String testStr = "";
+        for(int i = 0; i <= 20; i++) {
+            testStr += "!";
+        }
+        subCategory = new SubCategory(testStr, "demo_category");
+//      呼叫mainService的categoryAdd方法
+        res = mainService.subCategoryAdd(subCategory);
+        Assert.isTrue(res.getMessage().equals(RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getMessage()), "Failed!(測試3.5)");
+        
 //      測試4 : 判斷'分類'是否已存在
 //      新增1個SubCategory型別的變數(subCategory)
         subCategory = new SubCategory("demo_sub_category", "demo_category");

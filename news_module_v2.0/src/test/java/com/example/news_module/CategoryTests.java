@@ -44,6 +44,16 @@ public class CategoryTests {
         res = mainService.categoryAdd(category);
         Assert.isTrue(res.getMessage().equals(RtnCode.CATEGORY_EMPTY_ERROR.getMessage()), "Failed!(測試2-1)");
 
+//      測試2.5 : 判斷'分類'是否超過長度上限(20)
+        String testStr = "";
+        for(int i = 0; i <= 20; i++) {
+            testStr += "!";
+        }
+        category = new Category(testStr);
+//      呼叫mainService的categoryAdd方法
+        res = mainService.categoryAdd(category);
+        Assert.isTrue(res.getMessage().equals(RtnCode.CATEGORY_OVER_LENGTH_ERROR.getMessage()), "Failed!(測試2.5)");
+    
 //      測試3 : 將 分類資料(category) 存到資料庫
 //      新增1個Category型別的變數(category)
         category = new Category("demo_category");

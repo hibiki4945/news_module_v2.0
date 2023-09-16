@@ -51,10 +51,20 @@ public class MainServiceImpl implements MainService{
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.NEWS_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage(), null);
         }
+//      判斷'新聞標題'是否超過長度上限
+        if(news.getNewsTitle().length() > 100) {
+//          返回(NewsAddResponse型別)訊息
+            return new NewsAddResponse(RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
+        }
 //      判斷'新聞副標題'是否為空
         if(news.getNewsSubTitle() == null || news.getNewsSubTitle().isBlank()) {
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'新聞副標題'是否超過長度上限
+        if(news.getNewsSubTitle().length() > 20) {
+//          返回(NewsAddResponse型別)訊息
+            return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
         }
 //      判斷'發布時間'是否格式錯誤
         if(!news.getReleaseTime().matches("[\\d]{4}-[\\d]{2}-[\\d]{2}")) {
@@ -65,6 +75,11 @@ public class MainServiceImpl implements MainService{
         if(news.getContent() == null || news.getContent().isBlank()) {
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.CONTENT_EMPTY_ERROR.getCode(), RtnCode.CONTENT_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'內文'是否超過長度上限
+        if(news.getContent().length() > 1000) {
+//          返回(NewsAddResponse型別)訊息
+            return new NewsAddResponse(RtnCode.CONTENT_OVER_LENGTH_ERROR.getCode(), RtnCode.CONTENT_OVER_LENGTH_ERROR.getMessage(), null);
         }
         
 //      取得 當前時間
@@ -112,6 +127,11 @@ public class MainServiceImpl implements MainService{
 //          返回(CategoryAddResponse型別)訊息
             return new CategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
+//      判斷'分類'是否超過長度上限
+        if(category.getCategory().length() > 20) {
+//          返回(NewsAddResponse型別)訊息
+            return new CategoryAddResponse(RtnCode.CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
+        }
 //      判斷'分類'是否已存在
         if(categoryDao.existsById(category.getCategory())) {
 //          返回(CategoryAddResponse型別)訊息
@@ -148,6 +168,11 @@ public class MainServiceImpl implements MainService{
         if(subCategory.getSubCategory() == null || subCategory.getSubCategory().isBlank()) {
 //          返回(NewsAddResponse型別)訊息
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'子分類'是否超過長度上限(20)
+        if(subCategory.getSubCategory().length() > 20) {
+//          返回(NewsAddResponse型別)訊息
+            return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
 //      判斷'分類'是否不存在
         if(!categoryDao.existsById(subCategory.getCategory())) {
