@@ -3,6 +3,8 @@ package com.example.news_module.controller;
 import com.example.news_module.entity.Category;
 import com.example.news_module.entity.News;
 import com.example.news_module.entity.SubCategory;
+import com.example.news_module.repository.CategoryDao;
+import com.example.news_module.repository.SubCategoryDao;
 import com.example.news_module.service.ifs.MainService;
 import com.example.news_module.vo.CategoryAddResponse;
 import com.example.news_module.vo.NewsAddResponse;
@@ -15,14 +17,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class MainController {
     
 //  newsAddCheck的回傳結果的暫存資料
     private NewsAddResponse newsAddCheckData;
     
+    private String newsAddCategorySelect;
+    
     @Autowired
     private MainService mainService;
+    
+    @Autowired
+    private CategoryDao categoryDao;
+
+    @Autowired
+    private SubCategoryDao subCateogryDao;
     
     
     @RequestMapping(value = "/client_home")
@@ -55,6 +68,23 @@ public class MainController {
         News news = new News();
         model.addAttribute("news", news);
         model.addAttribute("error", "");
+
+        List<Category> res = categoryDao.findAll();
+        List<String> categoryList = new ArrayList<>();
+        for (Category item : res) {
+//            System.out.println(item.getCategory());
+            categoryList.add(item.getCategory());
+        }
+        model.addAttribute("categoryList", categoryList);
+        newsAddCategorySelect = news.getCategory();
+//        System.out.println("newsAddCategorySelect: "+newsAddCategorySelect);
+        List<SubCategory> res01 = subCateogryDao.findByCategory(newsAddCategorySelect);
+        List<String> subCategoryList = new ArrayList<>();
+        for (SubCategory item : res01) {
+//            System.out.println(item.getSubCategory());
+            subCategoryList.add(item.getSubCategory());
+        }
+        model.addAttribute("subCategoryList", subCategoryList);
         
         return "news_add";
     }
@@ -65,6 +95,28 @@ public class MainController {
         System.out.println(news);
         NewsAddResponse res = mainService.newsAddCheck(news);
         if(res.getCode() != "200") {
+
+            newsAddCategorySelect = news.getCategory();
+            System.out.println("newsAddCategorySelect: "+newsAddCategorySelect);
+            List<SubCategory> res01 = subCateogryDao.findByCategory(newsAddCategorySelect);
+            List<String> subCategoryList = new ArrayList<>();
+            for (SubCategory item : res01) {
+//                System.out.println(item.getSubCategory());
+                subCategoryList.add(item.getSubCategory());
+            }
+            model.addAttribute("subCategoryList", subCategoryList);
+
+            List<Category> res02 = categoryDao.findAll();
+            List<String> categoryList = new ArrayList<>();
+            for (Category item : res02) {
+//                System.out.println(item.getCategory());
+                categoryList.add(item.getCategory());
+            }
+            model.addAttribute("categoryList", categoryList);
+
+//            news.setCategory(newsAddCategorySelect);
+//            model.addAttribute("news", news);
+            
             System.out.println(res.getMessage());
             model.addAttribute("error", res.getMessage());
             return "news_add";
