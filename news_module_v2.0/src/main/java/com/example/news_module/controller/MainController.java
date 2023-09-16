@@ -209,6 +209,14 @@ public class MainController {
         model.addAttribute("subCategory", subCategory);
         model.addAttribute("error", "");
         
+        List<Category> res = categoryDao.findAll();
+        List<String> categoryList = new ArrayList<>();
+        for (Category item : res) {
+//            System.out.println(item.getCategory());
+            categoryList.add(item.getCategory());
+        }
+        model.addAttribute("categoryList", categoryList);
+        
         return "sub_category_add";
     }
 
