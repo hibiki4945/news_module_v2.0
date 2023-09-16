@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "sub_category")
 public class SubCategory {
@@ -20,7 +22,7 @@ public class SubCategory {
     private String category;
     
     @Column(name = "build_time")
-    private String buildTime;
+    private Date buildTime;
 
     public String getSubCategory() {
         return subCategory;
@@ -46,20 +48,26 @@ public class SubCategory {
         this.category = category;
     }
 
-    public String getBuildTime() {
+    public Date getBuildTime() {
         return buildTime;
     }
 
-    public void setBuildTime(String buildTime) {
+    public void setBuildTime(Date buildTime) {
         this.buildTime = buildTime;
     }
 
-    public SubCategory(String subCategory, int subCategoryNewsCount, String category, String buildTime) {
+    public SubCategory(String subCategory, int subCategoryNewsCount, String category, Date buildTime) {
         super();
         this.subCategory = subCategory;
         this.subCategoryNewsCount = subCategoryNewsCount;
         this.category = category;
         this.buildTime = buildTime;
+    }
+
+    public SubCategory(String subCategory, String category) {
+        super();
+        this.subCategory = subCategory;
+        this.category = category;
     }
 
     public SubCategory() {

@@ -2,9 +2,11 @@ package com.example.news_module.controller;
 
 import com.example.news_module.entity.Category;
 import com.example.news_module.entity.News;
+import com.example.news_module.entity.SubCategory;
 import com.example.news_module.service.ifs.MainService;
 import com.example.news_module.vo.CategoryAddResponse;
 import com.example.news_module.vo.NewsAddResponse;
+import com.example.news_module.vo.SubCategoryAddResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -151,7 +153,24 @@ public class MainController {
     @RequestMapping(value = "/sub_category_add")
     public String subCategoryAdd(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
 
+        SubCategory subCategory = new SubCategory();
+        model.addAttribute("subCategory", subCategory);
+        model.addAttribute("error", "");
+        
         return "sub_category_add";
+    }
+
+    @PostMapping("/sub_category_add")
+    public String subCategoryAdd(@ModelAttribute("subCategory") SubCategory subCategory, Model model) {
+//        System.out.println("123");
+        System.out.println(subCategory);
+        SubCategoryAddResponse res = mainService.subCategoryAdd(subCategory);
+        if(res.getCode() != "200") {
+            System.out.println(res.getMessage());
+            model.addAttribute("error", res.getMessage());
+            return "sub_category_add";
+        }
+        return "sub_category_home";
     }
     
     @RequestMapping(value = "/sub_category_edit")

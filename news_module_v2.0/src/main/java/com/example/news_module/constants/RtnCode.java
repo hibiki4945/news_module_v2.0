@@ -13,7 +13,9 @@ public enum RtnCode {
     NEWS_EXISTS_ERROR("400", "news exists error!"),
     DAO_ERROR("400", "dao error!"),
     DATA_ERROR("400", "data error!"),
-    CATEGORY_EXISTS_ERROR("400", "category exists error!");
+    CATEGORY_EXISTS_ERROR("400", "category exists error!"),
+    SUB_CATEGORY_EXISTS_ERROR("400", "sub category exists error!"),
+    CATEGORY_NOT_EXISTS_ERROR("400", "category not exists error!");
     
     private String code;
     

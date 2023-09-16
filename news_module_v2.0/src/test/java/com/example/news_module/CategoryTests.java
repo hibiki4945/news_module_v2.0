@@ -56,8 +56,8 @@ public class CategoryTests {
         category = new Category("demo_category");
 //      呼叫mainService的categoryAdd方法
         res = mainService.categoryAdd(category);
-        Assert.isTrue(res.getMessage().equals(RtnCode.NEWS_EXISTS_ERROR.getMessage()), "Failed!(測試4)");
-
+        Assert.isTrue(res.getMessage().equals(RtnCode.CATEGORY_EXISTS_ERROR.getMessage()), "Failed!(測試4)");
+        
 //      刪除 測試用資料
         categoryDao.deleteById(category.getCategory());
         

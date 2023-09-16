@@ -3,12 +3,14 @@ package com.example.news_module.service.impl;
 import com.example.news_module.constants.RtnCode;
 import com.example.news_module.entity.Category;
 import com.example.news_module.entity.News;
+import com.example.news_module.entity.SubCategory;
 import com.example.news_module.repository.CategoryDao;
 import com.example.news_module.repository.NewsDao;
 import com.example.news_module.repository.SubCategoryDao;
 import com.example.news_module.service.ifs.MainService;
 import com.example.news_module.vo.CategoryAddResponse;
 import com.example.news_module.vo.NewsAddResponse;
+import com.example.news_module.vo.SubCategoryAddResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -126,6 +128,47 @@ public class MainServiceImpl implements MainService{
         Category res = categoryDao.save(category);
         
         return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), res);
+        
+    }
+
+    @Override
+    public SubCategoryAddResponse subCategoryAdd(SubCategory subCategory) {
+
+//      判斷'資料'是否為空
+        if(subCategory == null) {
+//          返回(CategoryAddResponse型別)訊息
+            return new SubCategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'分類'是否為空
+        if(subCategory.getCategory() == null || subCategory.getCategory().isBlank()) {
+//          返回(CategoryAddResponse型別)訊息
+            return new SubCategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'子分類'是否為空
+        if(subCategory.getSubCategory() == null || subCategory.getSubCategory().isBlank()) {
+//          返回(NewsAddResponse型別)訊息
+            return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
+        }
+//      判斷'分類'是否不存在
+        if(!categoryDao.existsById(subCategory.getCategory())) {
+//          返回(CategoryAddResponse型別)訊息
+            return new SubCategoryAddResponse(RtnCode.CATEGORY_NOT_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_NOT_EXISTS_ERROR.getMessage(), null);
+        }
+//      判斷'子分類'是否存在
+        if(subCategoryDao.existsById(subCategory.getSubCategory())) {
+//          返回(CategoryAddResponse型別)訊息
+            return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EXISTS_ERROR.getCode(), RtnCode.SUB_CATEGORY_EXISTS_ERROR.getMessage(), null);
+        }
+        
+//      取得 當前時間
+        Date date = new Date();
+//      將 date 設定到 news的BuildTime
+        subCategory.setBuildTime(date);
+        
+        subCategory.setSubCategoryNewsCount(0);
+        SubCategory res = subCategoryDao.save(subCategory);
+        
+        return new SubCategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), res);
         
     }
     
