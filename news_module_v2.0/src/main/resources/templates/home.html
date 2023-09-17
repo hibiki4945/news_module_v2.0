@@ -35,7 +35,6 @@
 	    <h1 class="text-3xl font-bold underline">
 	      最新消息:
 	    </h1>
-	    <form action="#" th:action="@{/home}" method="post" th:object="${news}" class="h-screen">
 			
 			<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
 		    	<a class="w-full h-full" href="/news_edit">Edit News</a>
@@ -44,30 +43,39 @@
          	<div class="justify-around">
 	         	<div class="flex">
 	         	
+	    		<form action="#" th:action="@{/home_search_category}" method="post" th:object="${news01}">
 					<div class="shadow-inner shadow-black m-1">
-						<div class="w-40 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+						<div class="w-32 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
 							<label class="text-white">分類:</label>
 						</div>
-						<div class="w-40 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+						<div class="w-32 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
 							<select th:field="*{category}">
 								<option th:each="l : ${categoryList}" th:value="${l}" th:text="${l}" />
 							</select>
 						</div>
 					</div>
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">查詢</button>
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">匹配</button>
 					
-					<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative"><a href="/home?mode=1">匹配</a></button>
+				</form>
+				
 					
+				<form action="#" th:action="@{/home}" method="post" th:object="${news02}">
 					<div class="shadow-inner shadow-black m-1">
-						<div class="w-40 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+						<div class="w-32 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
 							<label class="text-white">子分類:</label>
 						</div>
-						<div class="w-40 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+						<div class="w-32 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
 							<select th:field="*{subCategory}">
 								<option th:each="l : ${subCategoryList}" th:value="${l}" th:text="${l}" />
 							</select>
 						</div>
 					</div>
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">查詢</button>
 					
+				</form>
+					
+				<form action="#" th:action="@{/home}" method="post" th:object="${news03}">
 					<div class="shadow-inner shadow-black m-1">
 						<div class="w-48 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
 							<label class="text-white">新聞標題:</label>
@@ -76,29 +84,67 @@
 							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{newsTitle}" /><br/>
 						</div>
 					</div>
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">查詢</button>
+					
+				</form>
+					
+				<form action="#" th:action="@{/home}" method="post" th:object="${news04}">
 					<div class="shadow-inner shadow-black m-1">
-						<div class="w-40 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+						<div class="w-48 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">新聞副標題:</label>
+						</div>
+						<div class="w-48 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{newsSubTitle}" /><br/>
+						</div>
+					</div>
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">查詢</button>
+					
+				</form>
+				
+				<form action="#" th:action="@{/home}" method="post" th:object="${news05}">
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-36 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
 							<label class="text-white">開始時間:</label>
 						</div>
-						<div class="w-40 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+						<div class="w-36 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
 							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{releaseTime}" /><br/>
 						</div>
 					</div>
-					
 					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">查詢</button>
+					
+				</form>
+				
+				<form action="#" th:action="@{/home}" method="post" th:object="${news06}">
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-36 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">結束時間:</label>
+						</div>
+						<div class="w-36 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{buildTime}" /><br/>
+						</div>
+					</div>
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">查詢</button>
+					
+				</form>
+					
 					
 	         	</div>
          	</div>
 					
 			<table>
 				<tr>
-					<td th:text="id" class="border border-2 border-black bg-slate-"></td>
 					<td th:text="分類" class="border border-2 border-black bg-slate-"></td>
 					<td th:text="子分類" class="border border-2 border-black"></td>
 					<td th:text="新聞標題" class="border border-2 border-black"></td>
 					<td th:text="新聞副標題" class="border border-2 border-black"></td>
 					<td th:text="發布時間" class="border border-2 border-black"></td>
-					<td th:text="創建時間" class="border border-2 border-black"></td>
+				</tr>
+				<tr th:each="item : ${res}">
+					<td th:text="${item.category}" class="w-24 border border-2 border-black bg-white"></td>
+					<td th:text="${item.subCategory}" class="w-24 border border-2 border-black bg-white"></td>
+					<td th:text="${item.newsTitle}" class="w-44 border border-2 border-black bg-white"></td>
+					<td th:text="${item.newsSubTitle}" class="w-44 border border-2 border-black bg-white"></td>
+					<td th:text="${item.releaseTime}" class="w-44 border border-2 border-black bg-white"></td>
 				</tr>
 			</table>
 			
@@ -106,7 +152,6 @@
 	    	<a class="absolute w-full h-full left-0 top-0" href="/content">content</a>
 	    </button>
     	
-		</form>
 		
 	    <footer class="py-8 bg-gray-200">
 		 	<p>版權所有© 2023 Github-hibiki4945</p>

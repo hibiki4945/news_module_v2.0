@@ -4,6 +4,7 @@ import com.example.news_module.entity.Category;
 import com.example.news_module.entity.News;
 import com.example.news_module.entity.SubCategory;
 import com.example.news_module.repository.CategoryDao;
+import com.example.news_module.repository.NewsDao;
 import com.example.news_module.repository.SubCategoryDao;
 import com.example.news_module.service.ifs.MainService;
 import com.example.news_module.vo.CategoryAddResponse;
@@ -30,6 +31,9 @@ public class MainController {
     
     @Autowired
     private MainService mainService;
+
+    @Autowired
+    private NewsDao newsDao;
     
     @Autowired
     private CategoryDao categoryDao;
@@ -52,35 +56,16 @@ public class MainController {
     
     @RequestMapping(value = "/home")
     public String Home(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, Model model) {
-        System.out.println(mode);
-        if(mode.matches("1")) {
-            System.out.println("home?mode=1 !");
-        }
-//      News news = new News();
-//        model.addAttribute("news", news);
-      
-        News news = new News();
-        model.addAttribute("news", news);
 
-        List<Category> res02 = categoryDao.findAll();
-        List<String> categoryList = new ArrayList<>();
-        for (Category item : res02) {
-//            System.out.println(item.getCategory());
-            categoryList.add(item.getCategory());
-        }
-        model.addAttribute("categoryList", categoryList);
+
+            News news01 = new News();
+            News news02 = new News();
+            News news03 = new News();
+            News news04 = new News();
+            News news05 = new News();
+            News news06 = new News();
         
-        return "home";
-    }
-    
-    @PostMapping("/home")
-    public String Home(@ModelAttribute("news") News news, Model model) {
-//        System.out.println("123");
-        System.out.println(news);
-//        NewsAddResponse res = mainService.newsAddCheck(news);
-//        if(res.getCode() != "200") {
-
-            newsAddCategorySelect = news.getCategory();
+            newsAddCategorySelect = news01.getCategory();
             System.out.println("newsAddCategorySelect: "+newsAddCategorySelect);
             List<SubCategory> res01 = subCateogryDao.findByCategory(newsAddCategorySelect);
             List<String> subCategoryList = new ArrayList<>();
@@ -98,16 +83,86 @@ public class MainController {
             }
             model.addAttribute("categoryList", categoryList);
 
-//            news.setCategory(newsAddCategorySelect);
+            model.addAttribute("news01", news01);
+            model.addAttribute("news02", news02);
+            model.addAttribute("news03", news03);
+            model.addAttribute("news04", news04);
+            model.addAttribute("news05", news05);
+            model.addAttribute("news06", news06);
+            model.addAttribute("res", new ArrayList<News>());
             
-            model.addAttribute("news", news);
             
-//            System.out.println(res.getMessage());
-//            model.addAttribute("error", res.getMessage());
+        return "home";
+    }
+    
+//    @PostMapping("/home")
+//    public String Home(@ModelAttribute("news") News news, Model model) {
+//
+//        System.out.println(news);
+//
+//            newsAddCategorySelect = news.getCategory();
+//            System.out.println("newsAddCategorySelect: "+newsAddCategorySelect);
+//            List<SubCategory> res01 = subCateogryDao.findByCategory(newsAddCategorySelect);
+//            List<String> subCategoryList = new ArrayList<>();
+//            for (SubCategory item : res01) {
+//                subCategoryList.add(item.getSubCategory());
+//            }
+//            model.addAttribute("subCategoryList", subCategoryList);
+//
+//            List<Category> res02 = categoryDao.findAll();
+//            List<String> categoryList = new ArrayList<>();
+//            for (Category item : res02) {
+//                categoryList.add(item.getCategory());
+//            }
+//            model.addAttribute("categoryList", categoryList);
+//
+//            model.addAttribute("news", news);
+//            
+//            return "home";
+////        }
+//    }
+    
+    @PostMapping("/home_search_category")
+    public String HomeSearchCategory(@ModelAttribute("news01") News news, Model model) {
+
+        System.out.println(news);
+
+            newsAddCategorySelect = news.getCategory();
+            System.out.println("newsAddCategorySelect: "+newsAddCategorySelect);
+            List<SubCategory> res01 = subCateogryDao.findByCategory(newsAddCategorySelect);
+            List<String> subCategoryList = new ArrayList<>();
+            for (SubCategory item : res01) {
+                subCategoryList.add(item.getSubCategory());
+            }
+            model.addAttribute("subCategoryList", subCategoryList);
+
+            List<Category> res02 = categoryDao.findAll();
+            List<String> categoryList = new ArrayList<>();
+            for (Category item : res02) {
+                categoryList.add(item.getCategory());
+            }
+            model.addAttribute("categoryList", categoryList);
+
+            model.addAttribute("news01", news);
+
+            News news02 = new News();
+            News news03 = new News();
+            News news04 = new News();
+            News news05 = new News();
+            News news06 = new News();
+            
+            model.addAttribute("news02", news02);
+            model.addAttribute("news03", news03);
+            model.addAttribute("news04", news04);
+            model.addAttribute("news05", news05);
+            model.addAttribute("news06", news06);
+            
+            List<News> res = newsDao.findByCategory(news.getCategory());
+            
+            model.addAttribute("res", res);
+            
             return "home";
 //        }
-//        newsAddCheckData = res;
-//        return "news_preview";
     }
     
     @RequestMapping(value = "/content")
