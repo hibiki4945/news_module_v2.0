@@ -51,9 +51,63 @@ public class MainController {
     }
     
     @RequestMapping(value = "/home")
-    public String Home(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String Home(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, Model model) {
+        System.out.println(mode);
+        if(mode.matches("1")) {
+            System.out.println("home?mode=1 !");
+        }
+//      News news = new News();
+//        model.addAttribute("news", news);
+      
+        News news = new News();
+        model.addAttribute("news", news);
 
+        List<Category> res02 = categoryDao.findAll();
+        List<String> categoryList = new ArrayList<>();
+        for (Category item : res02) {
+//            System.out.println(item.getCategory());
+            categoryList.add(item.getCategory());
+        }
+        model.addAttribute("categoryList", categoryList);
+        
         return "home";
+    }
+    
+    @PostMapping("/home")
+    public String Home(@ModelAttribute("news") News news, Model model) {
+//        System.out.println("123");
+        System.out.println(news);
+//        NewsAddResponse res = mainService.newsAddCheck(news);
+//        if(res.getCode() != "200") {
+
+            newsAddCategorySelect = news.getCategory();
+            System.out.println("newsAddCategorySelect: "+newsAddCategorySelect);
+            List<SubCategory> res01 = subCateogryDao.findByCategory(newsAddCategorySelect);
+            List<String> subCategoryList = new ArrayList<>();
+            for (SubCategory item : res01) {
+//                System.out.println(item.getSubCategory());
+                subCategoryList.add(item.getSubCategory());
+            }
+            model.addAttribute("subCategoryList", subCategoryList);
+
+            List<Category> res02 = categoryDao.findAll();
+            List<String> categoryList = new ArrayList<>();
+            for (Category item : res02) {
+//                System.out.println(item.getCategory());
+                categoryList.add(item.getCategory());
+            }
+            model.addAttribute("categoryList", categoryList);
+
+//            news.setCategory(newsAddCategorySelect);
+            
+            model.addAttribute("news", news);
+            
+//            System.out.println(res.getMessage());
+//            model.addAttribute("error", res.getMessage());
+            return "home";
+//        }
+//        newsAddCheckData = res;
+//        return "news_preview";
     }
     
     @RequestMapping(value = "/content")
