@@ -69,7 +69,7 @@ public class CategoryTests {
         Assert.isTrue(res.getMessage().equals(RtnCode.CATEGORY_EXISTS_ERROR.getMessage()), "Failed!(測試4)");
         
 //      刪除 測試用資料
-        categoryDao.deleteById(category.getCategory());
+        categoryDao.deleteByCategory(category.getCategory());
         
     }
     

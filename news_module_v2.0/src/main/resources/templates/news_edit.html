@@ -7,14 +7,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-slate-400">
-
+	
 	<div align="center">
 		<header class="bg-gray-200 p-2">
 		    <span class="text-2xl font-bold mr-48">最新消息模組</span>
 			<div class="absolute top-1 right-1">
 				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
 			    	<i class="fa-solid fa-house">
-			    		<a class="absolute w-full h-full left-0 top-0" href="/home"></a>
+			    		<a class="absolute w-full h-full left-0 top-0" href="/home/0"></a>
 			    	</i>
 		    	</button>
 	    	</div>
@@ -22,10 +22,76 @@
 	    <h1 class="text-3xl font-bold underline">
 	      最新消息:
 	    </h1>
-	    <form action="#" th:action="@{/news_edit}" method="post" class="h-screen">
-			<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-		    	<a class="absolute w-full h-full left-0 top-0" href="/news_preview">提交</a>
-	    	</button>
+	    <form action="#" th:action="@{/news_edit}" method="post" th:object="${news}" class="mb-12">
+	    	<div th:object="${error}">
+			  <span th:text="${error}" class="text-red-900"></span>
+	        </div>
+			<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
+		    	提交
+		    </button>
+         
+         	<div class="justify-around">
+	         	<div class="flex">
+	         	
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-40 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">分類:</label>
+						</div>
+						<div class="w-40 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<select th:field="*{category}">
+								<option th:each="l : ${categoryList}" th:value="${l}" th:text="${l}" />
+							</select>
+						</div>
+					</div>
+					
+					<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">匹配</button>
+					
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-40 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">子分類:</label>
+						</div>
+						<div class="w-40 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<select th:field="*{subCategory}">
+								<option th:each="l : ${subCategoryList}" th:value="${l}" th:text="${l}" />
+							</select>
+						</div>
+					</div>
+					
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-48 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">新聞標題:</label>
+						</div>
+						<div class="w-48 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{newsTitle}" /><br/>
+						</div>
+					</div>
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-48 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">新聞副標題:</label>
+						</div>
+						<div class="w-48 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{newsSubTitle}" /><br/>
+						</div>
+					</div>
+					<div class="shadow-inner shadow-black m-1">
+						<div class="w-48 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+							<label class="text-white">發佈時間:</label>
+						</div>
+						<div class="w-48 h-8 text-center mt-0 border border-2 border-lime-900 rounded-b-lg relative">
+							<input class="w-full h-full rounded-b-lg text-center" type="text" th:field="*{releaseTime}" /><br/>
+						</div>
+					</div>
+	         	</div>
+				<div class="shadow-inner shadow-black m-1">
+					<div class="w-2/3 h-8 text-center bg-lime-600 m-2 mb-0 border border-2 border-lime-900 rounded-t-lg">
+						<label class="text-white">內文:</label>
+					</div>
+					<textarea class="w-2/3 h-48 mt-0 border border-2 border-lime-900 rounded-b-lg relative overflow-h-auto" th:field="*{content}" >
+					</textarea>
+				</div>
+				
+			</div>
+			
 		</form>
 		
 	    <footer class="py-8 bg-gray-200">

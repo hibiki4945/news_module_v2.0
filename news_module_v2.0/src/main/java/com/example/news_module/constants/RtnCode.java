@@ -20,7 +20,8 @@ public enum RtnCode {
     NEWS_SUB_TITLE_OVER_LENGTH_ERROR("400", "news sub title over length error!"),
     CONTENT_OVER_LENGTH_ERROR("400", "content over length error!"),
     CATEGORY_OVER_LENGTH_ERROR("400", "category over length error!"),
-    SUB_CATEGORY_OVER_LENGTH_ERROR("400", "sub category over length error!");
+    SUB_CATEGORY_OVER_LENGTH_ERROR("400", "sub category over length error!"),
+    NO_CHANGE_ERROR("400", "no change error!");
     
     private String code;
     

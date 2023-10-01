@@ -10,8 +10,11 @@ import java.util.Date;
 @Entity
 @Table(name = "sub_category")
 public class SubCategory {
-    
+
     @Id
+    @Column(name = "id")
+    private int id;
+    
     @Column(name = "sub_category")
     private String subCategory;
     
@@ -56,8 +59,18 @@ public class SubCategory {
         this.buildTime = buildTime;
     }
 
-    public SubCategory(String subCategory, int subCategoryNewsCount, String category, Date buildTime) {
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public SubCategory(int id, String subCategory, int subCategoryNewsCount, String category, Date buildTime) {
         super();
+        this.id = id;
         this.subCategory = subCategory;
         this.subCategoryNewsCount = subCategoryNewsCount;
         this.category = category;

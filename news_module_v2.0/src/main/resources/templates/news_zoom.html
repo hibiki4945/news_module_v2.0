@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://cdn.tailwindcss.com"></script>
-<title>Client Content Page</title>
+<title>News Preview Page</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style type="text/css">
+    .content {white-space: pre;}
+</style>
 </head>
 <body class="bg-slate-400">
 
@@ -14,7 +17,7 @@
 			<div class="absolute top-1 right-1">
 		    	<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
 			    	<i class="fa-solid fa-house">
-			    		<a class="absolute w-full h-full left-0 top-0" href="/client_home"></a>
+			    		<a class="absolute w-full h-full left-0 top-0" href="/home/0"></a>
 			    	</i>
 		    	</button>
 	    	</div>
@@ -22,11 +25,33 @@
 	    <h1 class="text-3xl font-bold underline">
 	      最新消息:
 	    </h1>
-	    <form action="#" th:action="@{/client_content}" method="post" class="h-screen">
+	    <form action="#" th:action="@{/news_zoom}" method="post" th:object="${news}" class="mb-12">
 			
-		    <button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-		    	<a class="absolute w-full h-full left-0 top-0" href="/client_home">回列表</a>
-		    </button>
+         	<div class="justify-around ml-24">
+	         	<div class="flex">
+					<div class="text-center text-lg mt-0 relative">
+						<span th:text="*{category} "></span>
+						>
+						<span th:text=" *{subCategory}"></span>
+					</div>
+	         	</div>
+	         	<div class="flex">
+					<div class="text-center text-6xl mt-0 relative">
+						<label th:text="*{newsTitle}"></label>
+					</div>
+	         	</div>
+	         	<div class="flex">
+					<div class="text-center text-2xl mt-0 mr-6 relative">
+						<label th:text="*{newsSubTitle}"></label>
+					</div>
+					<div class="text-xl mt-0 relative">
+						<label th:text="*{releaseTime}"></label>
+					</div>
+				</div>
+	         	<div class="flex m-12">
+					<p th:text="*{content}" class="content"></p><br/>
+				</div>
+			</div>
 		</form>
 		
 	    <footer class="py-8 bg-gray-200">

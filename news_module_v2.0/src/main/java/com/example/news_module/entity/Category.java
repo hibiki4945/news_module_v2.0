@@ -12,6 +12,9 @@ import java.util.Date;
 public class Category {
 
     @Id
+    @Column(name = "id")
+    private int id;
+    
     @Column(name = "category")
     private String category;
     
@@ -45,8 +48,18 @@ public class Category {
         this.buildTime = buildTime;
     }
 
-    public Category(String category, int newsCount, Date buildTime) {
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Category(int id, String category, int newsCount, Date buildTime) {
         super();
+        this.id = id;
         this.category = category;
         this.newsCount = newsCount;
         this.buildTime = buildTime;
@@ -62,9 +75,5 @@ public class Category {
         // TODO Auto-generated constructor stub
     }
 
-    @Override
-    public String toString() {
-        return "Category [category=" + category + ", newsCount=" + newsCount + ", buildTime=" + buildTime + "]";
-    }
     
 }

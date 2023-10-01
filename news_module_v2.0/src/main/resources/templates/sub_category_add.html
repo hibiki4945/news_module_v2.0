@@ -14,7 +14,7 @@
 			<div class="absolute top-1 right-1">
 				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
 			    	<i class="fa-solid fa-house">
-			    		<a class="absolute w-full h-full left-0 top-0" href="/sub_category_home"></a>
+			    		<a class="absolute w-full h-full left-0 top-0" href="/sub_category_home/0"></a>
 			    	</i>
 		    	</button>
 	    	</div>
@@ -22,7 +22,7 @@
 	    <h1 class="text-3xl font-bold underline">
 	      最新消息:
 	    </h1>
-	    <form action="#" th:action="@{/sub_category_add}" method="post" th:object="${subCategory}" class="h-screen">
+	    <form action="#" th:action="@{/sub_category_add}" method="post" th:object="${subCategoryInput}" class="h-screen">
 			<div th:object="${error}">
 			  <span th:text="${error}" class="text-red-900"></span>
 	        </div>

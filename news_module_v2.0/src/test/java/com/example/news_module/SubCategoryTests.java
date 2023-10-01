@@ -97,9 +97,9 @@ public class SubCategoryTests {
         res = mainService.subCategoryAdd(subCategory);
         Assert.isTrue(res.getMessage().equals(RtnCode.SUB_CATEGORY_EXISTS_ERROR.getMessage()), "Failed!(測試6)");
         
-//      刪除 測試用資料
-        subCategoryDao.deleteById(subCategory.getSubCategory());
-        categoryDao.deleteById(subCategory.getCategory());
+//      刪除 測試用資料(記得改回(subCategoryDao.deleteById))
+//        subCategoryDao.deleteById(subCategory.getSubCategory());
+        categoryDao.deleteByCategory(subCategory.getCategory());
         
     }
     
