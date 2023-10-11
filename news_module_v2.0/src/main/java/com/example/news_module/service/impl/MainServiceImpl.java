@@ -26,10 +26,8 @@ public class MainServiceImpl implements MainService{
 
     @Autowired
     private NewsDao newsDao;
-    
     @Autowired
     private CategoryDao categoryDao;
-    
     @Autowired
     private SubCategoryDao subCategoryDao;
 //  新聞預新增
@@ -92,6 +90,7 @@ public class MainServiceImpl implements MainService{
 //      將 date 設定到 news的BuildTime
         news.setBuildTime(date);
         
+        
 //      判斷'內文'是否已存在(以內文 作為 判斷新聞是否重複的條件)
         if(newsDao.existsByContent(news.getContent())) {
 //          返回(NewsAddResponse型別)訊息
@@ -151,6 +150,9 @@ public class MainServiceImpl implements MainService{
         category.setNewsCount(0);
 //      新增分類
         Category res = categoryDao.save(category);
+        if(res == null) {
+            return new CategoryAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
+        }
 //      回傳 成功訊息
         return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), res);
         
@@ -184,7 +186,7 @@ public class MainServiceImpl implements MainService{
 //          返回(CategoryAddResponse型別)訊息
             return new SubCategoryAddResponse(RtnCode.CATEGORY_NOT_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_NOT_EXISTS_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否存在(記得改回(subCategoryDao.existsById))
+//      判斷'子分類'是否存在
         if(subCategoryDao.existsByCategoryAndSubCategory(subCategory.getCategory(), subCategory.getSubCategory())) {
 //        if(subCategoryDao.existsBySubCategory(subCategory.getSubCategory())) {
 //          返回(CategoryAddResponse型別)訊息
@@ -221,7 +223,6 @@ public class MainServiceImpl implements MainService{
                return newsList;
            }
 //  用子分類找新聞
-//  用子分類找新聞
     @Override
     public Page<News> findPageBySubCategory(boolean sortDescFlag, int pageNum, int pageSize, String subCategory) {
 //      宣告 排序用變數 
@@ -239,7 +240,6 @@ public class MainServiceImpl implements MainService{
         return newsList;
     }
 //  用新聞標題的關鍵字找新聞
-//  用新聞標題找新聞
     @Override
     public Page<News> findPageByNewsTitle(boolean sortDescFlag, int pageNum, int pageSize, String newsTitle) {
 //      宣告 排序用變數 
@@ -257,7 +257,6 @@ public class MainServiceImpl implements MainService{
         return newsList;
     }
 //  用新聞副標題的關鍵字找新聞
-//  用新聞副標題找新聞
     @Override
     public Page<News> findPageByNewsSubTitle(boolean sortDescFlag, int pageNum, int pageSize, String newsSubTitle) {
 //      宣告 排序用變數 
@@ -274,7 +273,6 @@ public class MainServiceImpl implements MainService{
 //      回傳 搜尋結果
         return newsList;
     }
-//  用大於發布時間找新聞
 //  用大於發布時間找新聞
     @Override
     public Page<News> findPageByReleaseTimeGreater(boolean sortDescFlag, int pageNum, int pageSize, String date) {
@@ -293,7 +291,6 @@ public class MainServiceImpl implements MainService{
         return newsList;
     }
 //  用小於發布時間找新聞
-//  用小於發布時間找新聞
     @Override
     public Page<News> findPageByReleaseTimeLess(boolean sortDescFlag, int pageNum, int pageSize, String date) {
 //      宣告 排序用變數 
@@ -311,9 +308,9 @@ public class MainServiceImpl implements MainService{
         return newsList;
     }
 //  用複合條件找新聞
-//  用複合條件找新聞
     @Override
-    public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle, String ReleaseTime) {
+    public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle, String ReleaseTimeStart, String ReleaseTimeEnd, String BuildTimeStart, String BuildTimeEnd) {
+
 //      宣告 排序用變數 
         Sort sort = null;
 //      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
@@ -324,11 +321,26 @@ public class MainServiceImpl implements MainService{
             sort = Sort.by(Sort.Direction.ASC , "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
 //      用複合條件找新聞
-        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTime);
+//        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTime);
+        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTimeStart, ReleaseTimeEnd, BuildTimeStart, BuildTimeEnd);
 //      回傳 搜尋結果
         return newsList;
     }
-//  新聞預編輯
+//  找所有新聞(依照發布日 降冪排序)
+    @Override
+    public Page<News> findPageAll(boolean sortDescFlag, int pageNum, int pageSize) {
+
+//      宣告 排序用變數 
+        Sort sort = null;
+//      依照發布日 降冪排序
+        sort = Sort.by(Sort.Direction.DESC , "releaseTime");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+//      用複合條件找新聞
+//        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTime);
+        Page<News> newsList = newsDao.findAll(pageable);
+//      回傳 搜尋結果
+        return newsList;
+    }
 //  新聞預編輯
     @Override
     public NewsAddResponse newsEditCheck(News news) {
@@ -398,7 +410,6 @@ public class MainServiceImpl implements MainService{
         
     }
 //  新聞編輯
-//  新聞編輯
     @Override
     public NewsAddResponse newsEdit(NewsAddResponse newsAddResponse) {
 //      確認 新聞的預編輯動作 是否正常
@@ -422,7 +433,6 @@ public class MainServiceImpl implements MainService{
         
     }
 //  刪除新聞
-//  刪除新聞
     @Override
     public void newsDelete(int id) {
         try {
@@ -437,7 +447,6 @@ public class MainServiceImpl implements MainService{
         }
     }
 //  搜尋所有分類
-//  搜尋 所有分類
     @Override
     public Page<Category> findCategoryPageByAll(boolean sortDescFlag, int pageNum, int pageSize) {
 //      宣告 排序用變數 
@@ -455,10 +464,8 @@ public class MainServiceImpl implements MainService{
         return categoryList;
     }
 //  分類編輯
-//  分類編輯
     @Override
     public CategoryAddResponse categoryEdit(Category category) {
-
 //      判斷'資料'是否為空
         if(category == null) {
 //          返回(CategoryAddResponse型別)訊息
@@ -489,7 +496,6 @@ public class MainServiceImpl implements MainService{
         return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), null);
         
     }
-//  分類編輯其新聞數量
 //  更新分類的新聞數量
     @Override
     public CategoryAddResponse categoryEditNewsCount(Category category) {
@@ -521,7 +527,6 @@ public class MainServiceImpl implements MainService{
         
     }
 //  刪除分類
-//  刪除分類
     @Override
     public void categoryDelete(int id) {
         try {
@@ -536,7 +541,6 @@ public class MainServiceImpl implements MainService{
         }
         
     }
-//  搜尋所有子分類
 //  搜尋所有子分類
     @Override
     public Page<SubCategory> findSubCategoryPageByAll(boolean sortDescFlag, int pageNum, int pageSize) {
@@ -554,7 +558,6 @@ public class MainServiceImpl implements MainService{
 //      回傳 搜尋結果
         return subCategoryList;
     }
-//  搜尋所有子分類(用分類)
 //  搜尋子分類(用分類)
     @Override
     public Page<SubCategory> findSubCategoryPageByCategory(boolean sortDescFlag, int pageNum, int pageSize, String category) {
@@ -572,7 +575,6 @@ public class MainServiceImpl implements MainService{
 //      回傳 搜尋結果
         return subCategoryList;
     }
-//  子分類編輯
 //  編輯子分類
     @Override
     public SubCategoryAddResponse subCategoryEdit(SubCategory subCategory) {
@@ -609,9 +611,9 @@ public class MainServiceImpl implements MainService{
             return new SubCategoryAddResponse(RtnCode.NO_CHANGE_ERROR.getCode(), RtnCode.NO_CHANGE_ERROR.getMessage(), null);
         }
         
-//      記得做 動作結果的判斷
+//      更新子分類
         int res = subCategoryDao.updateSubCategoryById(subCategory.getId(), subCategory.getCategory(), subCategory.getSubCategory());
-        
+//      確認 更新是否正常
         if(!(res > 0)) {
             return new SubCategoryAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
         }
@@ -619,7 +621,6 @@ public class MainServiceImpl implements MainService{
         return new SubCategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), null);
         
     }
-//  刪除子分類
 //  刪除子分類
     @Override
     public void subCategoryDelete(int id) {
@@ -634,13 +635,11 @@ public class MainServiceImpl implements MainService{
         
     }
 //  搜尋新聞(用分類)
-//  搜尋新聞(用分類)
     @Override
     public List<News> findByCategory(String category) {
         List<News> newsList = newsDao.findByCategory(category);
         return newsList;
     }
-//  搜尋新聞(用子分類)
 //  搜尋新聞(用子分類)
     @Override
     public List<News> findBySubCategory(String subCategory) {
@@ -648,13 +647,11 @@ public class MainServiceImpl implements MainService{
         return newsList;
     }
 //  搜尋所有分類
-//  搜尋所有分類
     @Override
     public List<Category> findCategoryByAll() {
         List<Category> categoryList = categoryDao.findAll();
         return categoryList;
     }
-//  搜尋子分類(用分類)
 //  搜尋子分類(用分類)
     @Override
     public List<SubCategory> findSubCategoryByCategory(String category) {
@@ -662,13 +659,11 @@ public class MainServiceImpl implements MainService{
         return subCategoryList;
     }
 //  搜尋新聞(用分類+子分類)
-//  搜尋新聞(用分類+子分類)
     @Override
     public List<News> findByCategoryAndSubCategory(String category, String subCategory) {
         List<News> newsList = newsDao.findByCategoryAndSubCategory(category, subCategory);
         return newsList;
     }
-//  更新 子分類的新聞數量
 //  更新子分類的新聞數量
     @Override
     public SubCategoryAddResponse subCategoryEditNewsCount(SubCategory subCategory) {

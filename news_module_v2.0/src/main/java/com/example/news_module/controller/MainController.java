@@ -9,6 +9,7 @@ import com.example.news_module.repository.SubCategoryDao;
 import com.example.news_module.service.ifs.MainService;
 import com.example.news_module.vo.CategoryAddResponse;
 import com.example.news_module.vo.CheckedRes;
+import com.example.news_module.vo.MultipleSearch;
 import com.example.news_module.vo.NewsAddResponse;
 import com.example.news_module.vo.SubCategoryAddResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class MainController {
 //  最近一次的新聞搜尋關鍵字
     private String lastKeyWordStr = "";
 //  最近一次的新聞搜尋關鍵字(複合搜尋)
-    private News lastKeyWordMultipleStr = new News();
+    private MultipleSearch lastKeyWordMultipleStr = new MultipleSearch();
 //  升冪&降冪的設定
     private boolean sortDescFlag = false;
 //  最近一次的新聞搜尋結果
@@ -47,7 +48,7 @@ public class MainController {
 //  最近一次的勾選結果
     private CheckedRes checkedResTemp = null;
 //  最近一次的勾選結果的總勾選數
-    private int checkedResTempCount = -1;
+    private int checkedResTempCount = 0;
 //  最近一次的勾選結果的新聞id
     private int idTemp = 0;
     ////////////////////////////////////////////////
@@ -92,8 +93,10 @@ public class MainController {
     //////////////////////////////////////////////////
 //  管理端的新聞主頁
     @RequestMapping(value = "/home/{pageNum}")
-    public String Home(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, @RequestParam(value = "pageNum01", defaultValue = "0") int pageNum01,
-                       @PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+    public String Home(@PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+//        搜尋結果為零時 防止頁數為負
+          if(pageNum == -1)
+              pageNum = 0;
 //        將目前頁數暫存 更新到目前頁數
           pageNumTemp = pageNum;
         
@@ -111,7 +114,7 @@ public class MainController {
 //          新建一個 新聞的結束時間搜尋的輸入用變數
             News news06 = new News();
 //          新建一個 新聞的複合搜尋的輸入用變數
-            News news07 = new News();
+            MultipleSearch news07 = new MultipleSearch();
 //        (結束)新聞的搜尋的初始化設定
 
 //        (開始)新聞的搜尋的初始值設定
@@ -133,9 +136,9 @@ public class MainController {
 //          新聞的結束時間搜尋
             if(lastSearch == 6)// 取得 新聞的結束時間的搜尋結果
                 news06.setReleaseTime(lastKeyWordStr);
-//          新聞的複合搜尋
+//          新聞的複合搜尋 // 20231007(記得加上(暫存資料))
             if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果(測試用)
-                news07.setReleaseTime(lastKeyWordStr);
+                news07 = lastKeyWordMultipleStr;
 //        (結束)新聞的搜尋的初始值設定
             
 //        (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -237,7 +240,7 @@ public class MainController {
 //          新建一個 新聞的結束時間搜尋的輸入用變數
             News news06 = new News();
 //          新建一個 新聞的複合搜尋的輸入用變數
-            News news07 = new News();
+            MultipleSearch news07 = new MultipleSearch();
 //        (結束)新聞的搜尋的初始化設定
 
 //        (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -317,7 +320,7 @@ public class MainController {
 //            新建一個 新聞的結束時間搜尋的輸入用變數
               News news06 = new News();
 //            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
+              MultipleSearch news07 = new MultipleSearch();
 //          (結束)新聞的搜尋的初始化設定
 
 //          (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -397,7 +400,7 @@ public class MainController {
 //            新建一個 新聞的結束時間搜尋的輸入用變數
               News news06 = new News();
 //            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
+              MultipleSearch news07 = new MultipleSearch();
 //          (結束)新聞的搜尋的初始化設定
 
 //          (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -477,7 +480,7 @@ public class MainController {
 //            新建一個 新聞的結束時間搜尋的輸入用變數
               News news06 = new News();
 //            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
+              MultipleSearch news07 = new MultipleSearch();
 //          (結束)新聞的搜尋的初始化設定
 
 //          (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -557,7 +560,7 @@ public class MainController {
 //            新建一個 新聞的結束時間搜尋的輸入用變數
               News news06 = new News();
 //            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
+              MultipleSearch news07 = new MultipleSearch();
 //          (結束)新聞的搜尋的初始化設定
 
 //          (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -637,7 +640,7 @@ public class MainController {
 //            新建一個 新聞的結束時間搜尋的輸入用變數
               News news06 = news;
 //            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
+              MultipleSearch news07 = new MultipleSearch();
 //          (結束)新聞的搜尋的初始化設定
 
 //          (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -696,7 +699,7 @@ public class MainController {
     }
 //  管理端的新聞主頁(用新聞的複合條件搜尋)
     @PostMapping("/news_multiple_search")
-    public String NewsMultipleSearch(@ModelAttribute("news07") News news, Model model) {
+    public String NewsMultipleSearch(@ModelAttribute("news07") MultipleSearch news, Model model) {
 
             lastSearch = 7;
             lastKeyWordMultipleStr = news;
@@ -715,7 +718,7 @@ public class MainController {
 //            新建一個 新聞的結束時間搜尋的輸入用變數
               News news06 = new News();
 //            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = news;
+              MultipleSearch news07 = news;
 //          (結束)新聞的搜尋的初始化設定
 
 //          (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -994,7 +997,7 @@ public class MainController {
 //    新建一個 新聞的結束時間搜尋的輸入用變數
       News news06 = new News();
 //    新建一個 新聞的複合搜尋的輸入用變數
-      News news07 = new News();
+      MultipleSearch news07 = new MultipleSearch();
 //  (結束)新聞的搜尋的初始化設定
 
 //  (開始)新聞的搜尋的初始值設定
@@ -1018,7 +1021,7 @@ public class MainController {
           news06.setReleaseTime(lastKeyWordStr);
 //    新聞的複合搜尋
       if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-          news07.setReleaseTime(lastKeyWordStr);
+          news07 = lastKeyWordMultipleStr;
 //  (結束)新聞的搜尋的初始值設定
       
 //  (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -1197,7 +1200,7 @@ public class MainController {
 //    新建一個 新聞的結束時間搜尋的輸入用變數
       News news06 = new News();
 //    新建一個 新聞的複合搜尋的輸入用變數
-      News news07 = new News();
+      MultipleSearch news07 = new MultipleSearch();
 //  (結束)新聞的搜尋的初始化設定
 
 //  (開始)新聞的搜尋的初始值設定
@@ -1221,7 +1224,7 @@ public class MainController {
           news06.setReleaseTime(lastKeyWordStr);
 //    新聞的複合搜尋
       if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-          news07.setReleaseTime(lastKeyWordStr);
+          news07 = lastKeyWordMultipleStr;
 //  (結束)新聞的搜尋的初始值設定
       
 //  (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -1283,7 +1286,7 @@ public class MainController {
     //////////////////////////////////////////////////
 //  管理端的新聞預新增動作(填寫)
     @RequestMapping(value = "/news_add")
-    public String NewsAdd(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String NewsAdd(Model model) {
 //      新建一個 新聞型別的變數
         News news = new News();
 //      將 空的新聞型別的變數 傳到Thymeleaf
@@ -1336,7 +1339,7 @@ public class MainController {
     }
 //  管理端的新聞預編輯動作(填寫)    
     @RequestMapping(value = "/news_edit")
-    public String NewsEdit(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String NewsEdit(Model model) {
 
 //      (開始)分類列表的初始化設定
 //        將 新聞的分類選擇框用的List 傳到Thymeleaf
@@ -1362,7 +1365,7 @@ public class MainController {
 //          新建一個 新聞的結束時間搜尋的輸入用變數
             News news06 = new News();
 //          新建一個 新聞的複合搜尋的輸入用變數
-            News news07 = new News();
+            MultipleSearch news07 = new MultipleSearch();
 //        (結束)新聞的搜尋的初始化設定
 
 //        (開始)新聞的搜尋的初始值設定
@@ -1386,7 +1389,7 @@ public class MainController {
                 news06.setReleaseTime(lastKeyWordStr);
 //          新聞的複合搜尋
             if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-                news07.setReleaseTime(lastKeyWordStr);
+                news07 = lastKeyWordMultipleStr;
 //        (結束)新聞的搜尋的初始值設定
             
 //        (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -1521,7 +1524,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -1545,7 +1548,7 @@ public class MainController {
               news06.setReleaseTime(lastKeyWordStr);
 //        新聞的複合搜尋
           if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-              news07.setReleaseTime(lastKeyWordStr);
+              news07 = lastKeyWordMultipleStr;
 //      (結束)新聞的搜尋的初始值設定
           
 //      (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -1620,7 +1623,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -1644,7 +1647,7 @@ public class MainController {
               news06.setReleaseTime(lastKeyWordStr);
 //        新聞的複合搜尋
           if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-              news07.setReleaseTime(lastKeyWordStr);
+              news07 = lastKeyWordMultipleStr;
 //      (結束)新聞的搜尋的初始值設定
           
 //      (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -1717,8 +1720,7 @@ public class MainController {
     
 //  管理端的新聞刪除動作
     @RequestMapping(value = "/news_delete")
-    public String NewsDelete(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, @RequestParam(value = "pageNum01", defaultValue = "0") int pageNum01,
-                       @RequestParam(value = "pageSize", defaultValue = "3") int pageSize, Model model) {
+    public String NewsDelete(@RequestParam(value = "pageSize", defaultValue = "3") int pageSize, Model model) {
 
 //      (開始)新聞的搜尋的初始化設定
 //        新建一個 新聞的分類搜尋的輸入用變數
@@ -1734,7 +1736,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -1758,7 +1760,7 @@ public class MainController {
               news06.setReleaseTime(lastKeyWordStr);
 //        新聞的複合搜尋
           if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-              news07.setReleaseTime(lastKeyWordStr);
+              news07 = lastKeyWordMultipleStr;
 //      (結束)新聞的搜尋的初始值設定
           
 //      (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -2126,7 +2128,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -2150,7 +2152,7 @@ public class MainController {
               news06.setReleaseTime(lastKeyWordStr);
 //        新聞的複合搜尋
           if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-              news07.setReleaseTime(lastKeyWordStr);
+              news07 = lastKeyWordMultipleStr;
 //      (結束)新聞的搜尋的初始值設定
           
 //      (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -2434,7 +2436,10 @@ public class MainController {
     //////////////////////////////////////////////////
 //  管理端的分類主頁
     @RequestMapping(value = "/category_home/{pageNum}")
-    public String categoryHome(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, @PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+    public String categoryHome(@PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+//      搜尋結果為零時 防止頁數為負
+        if(pageNum == -1)
+            pageNum = 0;
 //      勾選結果的初始化
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
@@ -2817,9 +2822,9 @@ public class MainController {
         return "category_home";
     }
     
-//  管理端的分類預新增動作(填寫)
+//  管理端的分類新增動作(填寫)
     @RequestMapping(value = "/category_add")
-    public String categoryAdd(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String categoryAdd(Model model) {
 //      Thymeleaf的填入用變數的初始化
         Category categoryInput = new Category();
         model.addAttribute("categoryInput", categoryInput);
@@ -2829,7 +2834,7 @@ public class MainController {
         
     }
 
-//  管理端的分類預新增動作(提交)    
+//  管理端的分類新增動作(提交)    
     @PostMapping("/category_add")
     public String CategoryAdd(@ModelAttribute("categoryInput") Category category, Model model) {
 //      確認 新增分類的動作是否正常
@@ -2856,7 +2861,7 @@ public class MainController {
     
 //  管理端的分類預編輯動作(填寫)
     @RequestMapping(value = "/category_edit")
-    public String CategoryEdit(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String CategoryEdit(Model model) {
 //      Thymeleaf的糰入用變數的初始化
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
@@ -3166,7 +3171,7 @@ public class MainController {
         category.setId(categoryIdTemp);
         category.setCategory(category01);
 //      分類的id的初始化
-        categoryIdTemp = -1;
+        categoryIdTemp = 0;
 //      進行 分類的編輯動作
         CategoryAddResponse res = mainService.categoryEdit(category);
         if(res.getCode() != "200") {
@@ -3195,8 +3200,7 @@ public class MainController {
     
 //  管理端的分類刪除動作
     @RequestMapping(value = "/category_delete")
-    public String CategoryDelete(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, @RequestParam(value = "pageNum01", defaultValue = "0") int pageNum01,
-                       Model model) {
+    public String CategoryDelete(Model model) {
 //        勾選結果的初始化
           CheckedRes checkedRes = new CheckedRes();
           model.addAttribute("checkedRes", checkedRes);
@@ -3502,7 +3506,10 @@ public class MainController {
     //////////////////////////////////////////////////
 //  管理端的子分類主頁
     @RequestMapping(value = "/sub_category_home/{pageNum}")
-    public String subCategoryHome(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, @PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+    public String subCategoryHome(@PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+//      搜尋結果為零時 防止頁數為負
+        if(pageNum == -1)
+            pageNum = 0;
 //      勾選用變數的初始化
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
@@ -3931,8 +3938,8 @@ public class MainController {
         return "sub_category_home";
     }
 
-//  管理端的子分類主頁(用分類搜尋)    @PostMapping("/sub_category_home_search_category")
-
+//  管理端的子分類主頁(用分類搜尋)    
+    @PostMapping("/sub_category_home_search_category")
     public String SubCategoryHomeSearchCategory(@ModelAttribute("subCategory") SubCategory subCategory, Model model) {
 //        準備 選擇用的分類列表
           List<Category> res02 = categoryDao.findAll();
@@ -3961,9 +3968,9 @@ public class MainController {
         
     }
     
-//  管理端的子分類預新增動作(填寫)
+//  管理端的子分類新增動作(填寫)
     @RequestMapping(value = "/sub_category_add")
-    public String subCategoryAdd(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String subCategoryAdd(Model model) {
 //      輸入用變數的初始化
         SubCategory subCategoryInput = new SubCategory();
         model.addAttribute("subCategoryInput", subCategoryInput);
@@ -3979,7 +3986,7 @@ public class MainController {
         return "sub_category_add";
     }
 
-//  管理端的子分類預新增動作(提交)  
+//  管理端的子分類新增動作(提交)  
     @PostMapping("/sub_category_add")
     public String subCategoryAdd(@ModelAttribute("subCategoryInput") SubCategory subCategoryInput, Model model) {
 //      勾選結果的初始化
@@ -4021,9 +4028,9 @@ public class MainController {
         return "sub_category_home";
     }
 
-//  管理端的子分類預編輯動作(填寫)
+//  管理端的子分類編輯動作(填寫)
     @RequestMapping(value = "/sub_category_edit")
-    public String subCategoryEdit(@RequestParam(name = "name", required = false, defaultValue = "World0") String name, Model model) {
+    public String subCategoryEdit(Model model) {
 //      準備 選擇用的分類列表
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
@@ -4340,7 +4347,7 @@ public class MainController {
         return "sub_category_edit";
     }
 
-//  管理端的子分類預編輯動作(提交)    
+//  管理端的子分類編輯動作(提交)    
     @PostMapping("/sub_category_edit")
     public String subCategoryEditPost(@ModelAttribute("subCategoryInput") SubCategory subCategoryInput, Model model) {
 //      勾選結果的初始化
@@ -4387,8 +4394,7 @@ public class MainController {
 
 //  管理端的子分類刪除動作
     @RequestMapping(value = "/sub_category_delete")
-    public String SubCategoryDelete(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, @RequestParam(value = "pageNum01", defaultValue = "0") int pageNum01,
-                       Model model) {
+    public String SubCategoryDelete(Model model) {
 //        勾選結果的初始化
           CheckedRes checkedRes = new CheckedRes();
           model.addAttribute("checkedRes", checkedRes);
@@ -4735,7 +4741,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -4832,7 +4838,7 @@ public class MainController {
 //      新建一個 新聞的結束時間搜尋的輸入用變數
         News news06 = new News();
 //      新建一個 新聞的複合搜尋的輸入用變數
-        News news07 = new News();
+        MultipleSearch news07 = new MultipleSearch();
 //    (結束)新聞的搜尋的初始化設定
 
 //    (開始)新聞的搜尋的初始值設定
@@ -4930,7 +4936,7 @@ public class MainController {
 //      新建一個 新聞的結束時間搜尋的輸入用變數
         News news06 = new News();
 //      新建一個 新聞的複合搜尋的輸入用變數
-        News news07 = new News();
+        MultipleSearch news07 = new MultipleSearch();
 //    (結束)新聞的搜尋的初始化設定
 
 //    (開始)新聞的搜尋的初始值設定
@@ -5359,7 +5365,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -5457,7 +5463,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -5775,7 +5781,6 @@ public class MainController {
     }
 
 //  子分類列表的初始化設定
-//  子分類列表的初始化設定
     private List<String> subCategoryListInitializer() {
 //      (開始)子分類列表的初始化設定
 //        暫存 新聞的分類搜尋的選擇結果
@@ -5796,7 +5801,6 @@ public class MainController {
     }
 
 //  新聞的條件搜尋
-//  搜尋新聞
     private Page<News> NewsSearch(int pageNum, int pageSize){
         
 //      (開始)新聞搜尋結果的設定
@@ -5823,9 +5827,12 @@ public class MainController {
 //        新聞的結束時間搜尋
           if(lastSearch == 6)// 取得 新聞的結束時間的搜尋結果
               newsPage=mainService.findPageByReleaseTimeLess(sortDescFlag, pageNum, pageSize, lastKeyWordStr);
-//        新聞的結束時間搜尋(測試用)
-          if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-              newsPage=mainService.findPageByNewsByInput(sortDescFlag, pageNum, pageSize, lastKeyWordMultipleStr.getCategory(), lastKeyWordMultipleStr.getSubCategory(), lastKeyWordMultipleStr.getNewsTitle(), lastKeyWordMultipleStr.getNewsSubTitle(), lastKeyWordMultipleStr.getReleaseTime());
+//        複合條件搜尋
+          if(lastSearch == 7)// 取得 複合條件的搜尋結果
+              newsPage=mainService.findPageByNewsByInput(sortDescFlag, pageNum, pageSize, lastKeyWordMultipleStr.getCategory(), lastKeyWordMultipleStr.getSubCategory(), lastKeyWordMultipleStr.getNewsTitle(), lastKeyWordMultipleStr.getNewsSubTitle(), lastKeyWordMultipleStr.getReleaseTimeStart(), lastKeyWordMultipleStr.getReleaseTimeEnd(), lastKeyWordMultipleStr.getBuildTimeStart(), lastKeyWordMultipleStr.getBuildTimeEnd());
+//        按照發布日期降冪的搜尋
+          if(lastSearch == 8)// 取得 複合條件的搜尋結果
+              newsPage=mainService.findPageAll(sortDescFlag, pageNum, pageSize);
 //        將 新聞的搜尋結果的Page 轉存到 暫存用的新聞的搜尋結果List
           NewsListTemp = newsPage.getContent();
 //        回傳 新聞的搜尋結果的Page
@@ -6114,69 +6121,19 @@ public class MainController {
     //////////////////////////////////////////////////
 //  客戶端的新聞主頁
     @RequestMapping(value = "/client_home/{pageNum}")
-    public String ClientHome(@RequestParam(name = "mode", required = false, defaultValue = "0") String mode, @RequestParam(value = "pageNum01", defaultValue = "0") int pageNum01,
-                       @PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+    public String ClientHome(@PathVariable(value="pageNum",required=false) int pageNum, Model model) {
+//      搜尋結果為零時 防止頁數為負
+        if(pageNum == -1)
+            pageNum = 0;
 //        暫存 此頁頁數
           pageNumTemp = pageNum;
         
-//        (開始)新聞的搜尋的初始化設定
-//          新建一個 新聞的分類搜尋的輸入用變數
-            News news01 = new News();
-//          新建一個 新聞的子分類搜尋的輸入用變數
-            News news02 = new News();
-//          新建一個 新聞的新聞標題搜尋的輸入用變數
-            News news03 = new News();
-//          新建一個 新聞的新聞副標題搜尋的輸入用變數
-            News news04 = new News();
-//          新建一個 新聞的開始時間搜尋的輸入用變數
-            News news05 = new News();
-//          新建一個 新聞的結束時間搜尋的輸入用變數
-            News news06 = new News();
-//          新建一個 新聞的複合搜尋的輸入用變數
-            News news07 = new News();
-//        (結束)新聞的搜尋的初始化設定
-
 //        (開始)新聞的搜尋的初始值設定
-//          新聞的分類搜尋
-            if(lastSearch == 1)// 取得 新聞的分類的搜尋結果
-                news01.setCategory(lastKeyWordStr);
-//          新聞的子分類搜尋
-            if(lastSearch == 2)// 取得 新聞的子分類的搜尋結果
-                news02.setSubCategory(lastKeyWordStr);  
-//          新聞的新聞標題搜尋
-            if(lastSearch == 3)// 取得 新聞的新聞標題的搜尋結果
-                news03.setNewsTitle(lastKeyWordStr);  
-//          新聞的新聞副標題搜尋
-            if(lastSearch == 4)// 取得 新聞的新聞副標題的搜尋結果
-                news04.setNewsSubTitle(lastKeyWordStr);
-//          新聞的開始時間搜尋
-            if(lastSearch == 5)// 取得 新聞的開始時間的搜尋結果
-                news05.setReleaseTime(lastKeyWordStr);
-//          新聞的結束時間搜尋
-            if(lastSearch == 6)// 取得 新聞的結束時間的搜尋結果
-                news06.setReleaseTime(lastKeyWordStr);
 //          新聞的複合搜尋
-            if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果(測試用)
-                news07.setReleaseTime(lastKeyWordStr);
+            lastSearch = 8;
+            lastKeyWordStr = "";
 //        (結束)新聞的搜尋的初始值設定
             
-//        (開始)新聞的搜尋的Thymeleaf傳入設定
-//          新建一個 新聞的分類搜尋的輸入用變數
-            model.addAttribute("news01", news01);
-//          新建一個 新聞的子分類搜尋的輸入用變數
-            model.addAttribute("news02", news02);
-//          新建一個 新聞的新聞標題搜尋的輸入用變數
-            model.addAttribute("news03", news03);
-//          新建一個 新聞的新聞副標題搜尋的輸入用變數
-            model.addAttribute("news04", news04);
-//          新建一個 新聞的開始時間搜尋的輸入用變數
-            model.addAttribute("news05", news05);
-//          新建一個 新聞的結束時間搜尋的輸入用變數
-            model.addAttribute("news06", news06);
-//          新建一個 新聞的複合搜尋的輸入用變數
-            model.addAttribute("news07", news07);
-//        (結束)新聞的搜尋的Thymeleaf傳入設定
-
 //        (開始)分類列表的初始化設定
 //          將 新聞的分類選擇框用的List 傳到Thymeleaf
             model.addAttribute("categoryList", categoryListInitializer());
@@ -6233,567 +6190,6 @@ public class MainController {
         }
 //      返回 客戶端的新聞主頁
         return "client_home";
-    }
-    
-//  客戶端的新聞主頁(用分類搜尋)
-    @PostMapping("/client_home_search_category")
-    public String ClientHomeSearchCategory(@ModelAttribute("news01") News news, Model model) {
-//        暫存目前的所有搜尋條件(新聞的分類搜尋)
-          newsAddCategorySelect = news.getCategory();
-          lastSearch = 1;
-          lastKeyWordStr = news.getCategory();
-
-//        (開始)新聞的搜尋的初始化設定
-//          新建一個 新聞的分類搜尋的輸入用變數
-            News news01 = news;
-//          新建一個 新聞的子分類搜尋的輸入用變數
-            News news02 = new News();
-//          新建一個 新聞的新聞標題搜尋的輸入用變數
-            News news03 = new News();
-//          新建一個 新聞的新聞副標題搜尋的輸入用變數
-            News news04 = new News();
-//          新建一個 新聞的開始時間搜尋的輸入用變數
-            News news05 = new News();
-//          新建一個 新聞的結束時間搜尋的輸入用變數
-            News news06 = new News();
-//          新建一個 新聞的複合搜尋的輸入用變數
-            News news07 = new News();
-//        (結束)新聞的搜尋的初始化設定
-
-//        (開始)新聞的搜尋的Thymeleaf傳入設定
-//          新建一個 新聞的分類搜尋的輸入用變數
-            model.addAttribute("news01", news01);
-//          新建一個 新聞的子分類搜尋的輸入用變數
-            model.addAttribute("news02", news02);
-//          新建一個 新聞的新聞標題搜尋的輸入用變數
-            model.addAttribute("news03", news03);
-//          新建一個 新聞的新聞副標題搜尋的輸入用變數
-            model.addAttribute("news04", news04);
-//          新建一個 新聞的開始時間搜尋的輸入用變數
-            model.addAttribute("news05", news05);
-//          新建一個 新聞的結束時間搜尋的輸入用變數
-            model.addAttribute("news06", news06);
-//          新建一個 新聞的複合搜尋的輸入用變數
-            model.addAttribute("news07", news07);
-//        (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//        (開始)分類列表的初始化設定
-//          將 新聞的分類選擇框用的List 傳到Thymeleaf
-            model.addAttribute("categoryList", categoryListInitializer());
-//        (結束)分類列表的初始化設定
-                
-//        (開始)子分類列表的初始化設定
-//          將 新聞的子分類選擇框用的List 傳到Thymeleaf
-            model.addAttribute("subCategoryList", subCategoryListInitializer());
-//        (結束)子分類列表的初始化設定
-
-//        (開始)勾選設定
-//          新建一個 勾選結果儲存用的變數
-            CheckedRes checkedRes = new CheckedRes();
-//          將 勾選結果儲存用的變數 傳到Thymeleaf
-            model.addAttribute("checkedRes", checkedRes);
-//        (結束)勾選設定
-
-//        (開始)分頁設定
-//          將 每頁最大顯示結果的筆數 改為10筆
-            int pageNum = 0;
-//            int pageSize = 10;
-//          將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-            model.addAttribute("pageNum", pageNum);
-//          將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-            model.addAttribute("pageSize", pageSize);
-//        (結束)分頁設定
-
-//        (開始)新聞搜尋結果的設定
-//          將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-            model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//          將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-            model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//        (結束)新聞搜尋結果的設定
-
-//          返回 客戶端的新聞主頁
-            return "client_home";
-        
-    }
-    
-//  客戶端的新聞主頁(用子分類搜尋)    
-    @PostMapping("/client_home_search_sub_category")
-    public String ClientHomeSearchSubCategory(@ModelAttribute("news02") News news, Model model) {
-//          暫存目前的所有搜尋條件(新聞的子分類搜尋)
-            lastSearch = 2;
-            lastKeyWordStr = news.getSubCategory();
-            
-//          (開始)新聞的搜尋的初始化設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              News news01 = new News();
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              News news02 = news;
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              News news03 = new News();
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              News news04 = new News();
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              News news05 = new News();
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              News news06 = new News();
-//            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
-//          (結束)新聞的搜尋的初始化設定
-
-//          (開始)新聞的搜尋的Thymeleaf傳入設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              model.addAttribute("news01", news01);
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              model.addAttribute("news02", news02);
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              model.addAttribute("news03", news03);
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              model.addAttribute("news04", news04);
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              model.addAttribute("news05", news05);
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              model.addAttribute("news06", news06);
-//            新建一個 新聞的複合搜尋的輸入用變數
-              model.addAttribute("news07", news07);
-//          (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//          (開始)分類列表的初始化設定
-//            將 新聞的分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("categoryList", categoryListInitializer());
-//          (結束)分類列表的初始化設定
-                  
-//          (開始)子分類列表的初始化設定
-//            將 新聞的子分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("subCategoryList", subCategoryListInitializer());
-//          (結束)子分類列表的初始化設定
-
-//          (開始)勾選設定
-//            新建一個 勾選結果儲存用的變數
-              CheckedRes checkedRes = new CheckedRes();
-//            將 勾選結果儲存用的變數 傳到Thymeleaf
-              model.addAttribute("checkedRes", checkedRes);
-//          (結束)勾選設定
-
-//          (開始)分頁設定
-//            將 每頁最大顯示結果的筆數 改為10筆
-              int pageNum = 0;
-//              int pageSize = 10;
-//            將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageNum", pageNum);
-//            將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageSize", pageSize);
-//          (結束)分頁設定
-
-//          (開始)新聞搜尋結果的設定
-//            將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-              model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//            將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//          (結束)新聞搜尋結果的設定
-
-//            返回 客戶端的新聞主頁
-              return "client_home";
-            
-    }
-    
-//  客戶端的新聞主頁(用新聞標題搜尋)
-    @PostMapping("/client_home_search_news_title")
-    public String ClientHomeSearchNewsTitle(@ModelAttribute("news03") News news, Model model) {
-//          暫存目前的所有搜尋條件(新聞的新聞標題搜尋)
-            lastSearch = 3;
-            lastKeyWordStr = news.getNewsTitle();
-
-//          (開始)新聞的搜尋的初始化設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              News news01 = new News();
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              News news02 = new News();
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              News news03 = news;
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              News news04 = new News();
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              News news05 = new News();
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              News news06 = new News();
-//            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
-//          (結束)新聞的搜尋的初始化設定
-
-//          (開始)新聞的搜尋的Thymeleaf傳入設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              model.addAttribute("news01", news01);
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              model.addAttribute("news02", news02);
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              model.addAttribute("news03", news03);
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              model.addAttribute("news04", news04);
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              model.addAttribute("news05", news05);
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              model.addAttribute("news06", news06);
-//            新建一個 新聞的複合搜尋的輸入用變數
-              model.addAttribute("news07", news07);
-//          (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//          (開始)分類列表的初始化設定
-//            將 新聞的分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("categoryList", categoryListInitializer());
-//          (結束)分類列表的初始化設定
-                  
-//          (開始)子分類列表的初始化設定
-//            將 新聞的子分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("subCategoryList", subCategoryListInitializer());
-//          (結束)子分類列表的初始化設定
-
-//          (開始)勾選設定
-//            新建一個 勾選結果儲存用的變數
-              CheckedRes checkedRes = new CheckedRes();
-//            將 勾選結果儲存用的變數 傳到Thymeleaf
-              model.addAttribute("checkedRes", checkedRes);
-//          (結束)勾選設定
-
-//          (開始)分頁設定
-//            將 每頁最大顯示結果的筆數 改為10筆
-              int pageNum = 0;
-//              int pageSize = 10;
-//            將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageNum", pageNum);
-//            將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageSize", pageSize);
-//          (結束)分頁設定
-
-//          (開始)新聞搜尋結果的設定
-//            將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-              model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//            將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//          (結束)新聞搜尋結果的設定
-
-//            返回 客戶端的新聞主頁
-              return "client_home";
-            
-    }
-    
-//  客戶端的新聞主頁(用新聞副標題搜尋)
-    @PostMapping("/client_home_search_news_sub_title")
-    public String ClientHomeSearchNewsSubTitle(@ModelAttribute("news04") News news, Model model) {
-//          暫存目前的所有搜尋條件(新聞的新聞副標題搜尋)
-            lastSearch = 4;
-            lastKeyWordStr = news.getNewsSubTitle();
-
-//          (開始)新聞的搜尋的初始化設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              News news01 = new News();
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              News news02 = new News();
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              News news03 = new News();
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              News news04 = news;
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              News news05 = new News();
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              News news06 = new News();
-//            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
-//          (結束)新聞的搜尋的初始化設定
-
-//          (開始)新聞的搜尋的Thymeleaf傳入設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              model.addAttribute("news01", news01);
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              model.addAttribute("news02", news02);
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              model.addAttribute("news03", news03);
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              model.addAttribute("news04", news04);
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              model.addAttribute("news05", news05);
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              model.addAttribute("news06", news06);
-//            新建一個 新聞的複合搜尋的輸入用變數
-              model.addAttribute("news07", news07);
-//          (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//          (開始)分類列表的初始化設定
-//            將 新聞的分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("categoryList", categoryListInitializer());
-//          (結束)分類列表的初始化設定
-                  
-//          (開始)子分類列表的初始化設定
-//            將 新聞的子分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("subCategoryList", subCategoryListInitializer());
-//          (結束)子分類列表的初始化設定
-
-//          (開始)勾選設定
-//            新建一個 勾選結果儲存用的變數
-              CheckedRes checkedRes = new CheckedRes();
-//            將 勾選結果儲存用的變數 傳到Thymeleaf
-              model.addAttribute("checkedRes", checkedRes);
-//          (結束)勾選設定
-
-//          (開始)分頁設定
-//            將 每頁最大顯示結果的筆數 改為10筆
-              int pageNum = 0;
-//              int pageSize = 10;
-//            將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageNum", pageNum);
-//            將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageSize", pageSize);
-//          (結束)分頁設定
-
-//          (開始)新聞搜尋結果的設定
-//            將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-              model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//            將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//          (結束)新聞搜尋結果的設定
-
-//            返回 客戶端的新聞主頁
-              return "client_home";
-            
-    }
-    
-//  客戶端的新聞主頁(用新聞的發布時間的開始時間搜尋)
-    @PostMapping("/client_home_search_start_time")
-    public String ClientHomeSearchStartTime(@ModelAttribute("news05") News news, Model model) {
-//          暫存目前的所有搜尋條件(新聞的開始時間搜尋)
-            lastSearch = 5;
-            lastKeyWordStr = news.getReleaseTime();
-
-//          (開始)新聞的搜尋的初始化設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              News news01 = new News();
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              News news02 = new News();
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              News news03 = new News();
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              News news04 = new News();
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              News news05 = news;
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              News news06 = new News();
-//            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
-//          (結束)新聞的搜尋的初始化設定
-
-//          (開始)新聞的搜尋的Thymeleaf傳入設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              model.addAttribute("news01", news01);
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              model.addAttribute("news02", news02);
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              model.addAttribute("news03", news03);
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              model.addAttribute("news04", news04);
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              model.addAttribute("news05", news05);
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              model.addAttribute("news06", news06);
-//            新建一個 新聞的複合搜尋的輸入用變數
-              model.addAttribute("news07", news07);
-//          (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//          (開始)分類列表的初始化設定
-//            將 新聞的分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("categoryList", categoryListInitializer());
-//          (結束)分類列表的初始化設定
-                  
-//          (開始)子分類列表的初始化設定
-//            將 新聞的子分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("subCategoryList", subCategoryListInitializer());
-//          (結束)子分類列表的初始化設定
-
-//          (開始)勾選設定
-//            新建一個 勾選結果儲存用的變數
-              CheckedRes checkedRes = new CheckedRes();
-//            將 勾選結果儲存用的變數 傳到Thymeleaf
-              model.addAttribute("checkedRes", checkedRes);
-//          (結束)勾選設定
-
-//          (開始)分頁設定
-//            將 每頁最大顯示結果的筆數 改為10筆
-              int pageNum = 0;
-//              int pageSize = 10;
-//            將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageNum", pageNum);
-//            將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageSize", pageSize);
-//          (結束)分頁設定
-
-//          (開始)新聞搜尋結果的設定
-//            將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-              model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//            將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//          (結束)新聞搜尋結果的設定
-
-//            返回 客戶端的新聞主頁
-              return "client_home";
-            
-    }
-    
-//  客戶端的新聞主頁(用新聞的發布時間的結束時間搜尋)
-    @PostMapping("/client_home_search_end_time")
-    public String ClientHomeSearchEndTime(@ModelAttribute("news06") News news, Model model) {
-//          暫存目前的所有搜尋條件(新聞的結束時間搜尋)
-            lastSearch = 6;
-            lastKeyWordStr = news.getReleaseTime();
-
-//          (開始)新聞的搜尋的初始化設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              News news01 = new News();
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              News news02 = new News();
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              News news03 = new News();
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              News news04 = new News();
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              News news05 = new News();
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              News news06 = news;
-//            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = new News();
-//          (結束)新聞的搜尋的初始化設定
-
-//          (開始)新聞的搜尋的Thymeleaf傳入設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              model.addAttribute("news01", news01);
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              model.addAttribute("news02", news02);
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              model.addAttribute("news03", news03);
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              model.addAttribute("news04", news04);
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              model.addAttribute("news05", news05);
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              model.addAttribute("news06", news06);
-//            新建一個 新聞的複合搜尋的輸入用變數
-              model.addAttribute("news07", news07);
-//          (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//          (開始)分類列表的初始化設定
-//            將 新聞的分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("categoryList", categoryListInitializer());
-//          (結束)分類列表的初始化設定
-                  
-//          (開始)子分類列表的初始化設定
-//            將 新聞的子分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("subCategoryList", subCategoryListInitializer());
-//          (結束)子分類列表的初始化設定
-
-//          (開始)勾選設定
-//            新建一個 勾選結果儲存用的變數
-              CheckedRes checkedRes = new CheckedRes();
-//            將 勾選結果儲存用的變數 傳到Thymeleaf
-              model.addAttribute("checkedRes", checkedRes);
-//          (結束)勾選設定
-
-//          (開始)分頁設定
-//            將 每頁最大顯示結果的筆數 改為10筆
-              int pageNum = 0;
-//              int pageSize = 10;
-//            將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageNum", pageNum);
-//            將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageSize", pageSize);
-//          (結束)分頁設定
-
-//          (開始)新聞搜尋結果的設定
-//            將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-              model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//            將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//          (結束)新聞搜尋結果的設定
-
-//            返回 客戶端的新聞主頁
-              return "client_home";
-            
-    }
-    
-//  客戶端的新聞主頁(用新聞的複合條件搜尋)
-    @PostMapping("/client_news_multiple_search")
-    public String ClientNewsMultipleSearch(@ModelAttribute("news07") News news, Model model) {
-//          暫存目前的所有搜尋條件(新聞的複合搜尋)
-            lastSearch = 7;
-            lastKeyWordMultipleStr = news;
-
-//          (開始)新聞的搜尋的初始化設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              News news01 = new News();
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              News news02 = new News();
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              News news03 = new News();
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              News news04 = new News();
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              News news05 = new News();
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              News news06 = new News();
-//            新建一個 新聞的複合搜尋的輸入用變數
-              News news07 = news;
-//          (結束)新聞的搜尋的初始化設定
-
-//          (開始)新聞的搜尋的Thymeleaf傳入設定
-//            新建一個 新聞的分類搜尋的輸入用變數
-              model.addAttribute("news01", news01);
-//            新建一個 新聞的子分類搜尋的輸入用變數
-              model.addAttribute("news02", news02);
-//            新建一個 新聞的新聞標題搜尋的輸入用變數
-              model.addAttribute("news03", news03);
-//            新建一個 新聞的新聞副標題搜尋的輸入用變數
-              model.addAttribute("news04", news04);
-//            新建一個 新聞的開始時間搜尋的輸入用變數
-              model.addAttribute("news05", news05);
-//            新建一個 新聞的結束時間搜尋的輸入用變數
-              model.addAttribute("news06", news06);
-//            新建一個 新聞的複合搜尋的輸入用變數
-              model.addAttribute("news07", news07);
-//          (結束)新聞的搜尋的Thymeleaf傳入設定
-
-//          (開始)分類列表的初始化設定
-//            將 新聞的分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("categoryList", categoryListInitializer());
-//          (結束)分類列表的初始化設定
-                  
-//          (開始)子分類列表的初始化設定
-//            將 新聞的子分類選擇框用的List 傳到Thymeleaf
-              model.addAttribute("subCategoryList", subCategoryListInitializer());
-//          (結束)子分類列表的初始化設定
-
-//          (開始)勾選設定
-//            新建一個 勾選結果儲存用的變數
-              CheckedRes checkedRes = new CheckedRes();
-//            將 勾選結果儲存用的變數 傳到Thymeleaf
-              model.addAttribute("checkedRes", checkedRes);
-//          (結束)勾選設定
-
-//          (開始)分頁設定
-//            將 每頁最大顯示結果的筆數 改為10筆
-              int pageNum = 0;
-//              int pageSize = 10;
-//            將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageNum", pageNum);
-//            將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("pageSize", pageSize);
-//          (結束)分頁設定
-
-//          (開始)新聞搜尋結果的設定
-//            將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
-              model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//            將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-              model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//          (結束)新聞搜尋結果的設定
-
-//            返回 客戶端的新聞主頁
-              return "client_home";
-            
     }
     
 //  客戶端的勾選動作
@@ -7016,7 +6412,7 @@ public class MainController {
 //    新建一個 新聞的結束時間搜尋的輸入用變數
       News news06 = new News();
 //    新建一個 新聞的複合搜尋的輸入用變數
-      News news07 = new News();
+      MultipleSearch news07 = new MultipleSearch();
 //  (結束)新聞的搜尋的初始化設定
 
 //  (開始)新聞的搜尋的初始值設定
@@ -7040,7 +6436,7 @@ public class MainController {
           news06.setReleaseTime(lastKeyWordStr);
 //    新聞的複合搜尋
       if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-          news07.setReleaseTime(lastKeyWordStr);
+          news07 = lastKeyWordMultipleStr;
 //  (結束)新聞的搜尋的初始值設定
       
 //  (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -7219,7 +6615,7 @@ public class MainController {
 //    新建一個 新聞的結束時間搜尋的輸入用變數
       News news06 = new News();
 //    新建一個 新聞的複合搜尋的輸入用變數
-      News news07 = new News();
+      MultipleSearch news07 = new MultipleSearch();
 //  (結束)新聞的搜尋的初始化設定
 
 //  (開始)新聞的搜尋的初始值設定
@@ -7243,7 +6639,7 @@ public class MainController {
           news06.setReleaseTime(lastKeyWordStr);
 //    新聞的複合搜尋
       if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-          news07.setReleaseTime(lastKeyWordStr);
+          news07 = lastKeyWordMultipleStr;
 //  (結束)新聞的搜尋的初始值設定
       
 //  (開始)新聞的搜尋的Thymeleaf傳入設定
@@ -7319,7 +6715,7 @@ public class MainController {
 //        新建一個 新聞的結束時間搜尋的輸入用變數
           News news06 = new News();
 //        新建一個 新聞的複合搜尋的輸入用變數
-          News news07 = new News();
+          MultipleSearch news07 = new MultipleSearch();
 //      (結束)新聞的搜尋的初始化設定
 
 //      (開始)新聞的搜尋的初始值設定
@@ -7343,7 +6739,7 @@ public class MainController {
               news06.setReleaseTime(lastKeyWordStr);
 //        新聞的複合搜尋
           if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果
-              news07.setReleaseTime(lastKeyWordStr);
+              news07 = lastKeyWordMultipleStr;
 //      (結束)新聞的搜尋的初始值設定
           
 //      (開始)新聞的搜尋的Thymeleaf傳入設定

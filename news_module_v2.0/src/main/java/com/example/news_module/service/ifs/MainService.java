@@ -38,7 +38,9 @@ public interface MainService {
 //  用小於發布時間找新聞
     public Page<News> findPageByReleaseTimeLess(boolean sortDescFlag, int pageNum, int pageSize, String date);
 //  用複合條件找新聞
-    public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle, String ReleaseTime);
+    public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle, String ReleaseTimeStart, String ReleaseTimeEnd, String BuildTimeStart, String BuildTimeEnd);
+//  找所有新聞(依照發布日 降冪排序)
+    public Page<News> findPageAll(boolean sortDescFlag, int pageNum, int pageSize);
 //  新聞預編輯
     public NewsAddResponse newsEditCheck(News news);
 //  新聞編輯

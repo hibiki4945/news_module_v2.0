@@ -20,7 +20,7 @@ public interface SubCategoryDao extends JpaRepository<SubCategory, Integer>{
     public Page<SubCategory> findByCategory(Pageable pageable, String category);
 //  判斷子分類是否已存在(用子分類)
     public boolean existsBySubCategory(String subCategory);
-//  判斷子分類是否已存在(用子分類+分類)    
+//  判斷子分類是否已存在(用分類+子分類)    
     public boolean existsByCategoryAndSubCategory(String category, String subCategory);
 //  更新 子分類
     @Modifying
@@ -54,6 +54,6 @@ public interface SubCategoryDao extends JpaRepository<SubCategory, Integer>{
             + " where s.category = :inputOldCategory ", nativeQuery = true)
     public int updateSubCategoryCategoryByOldCategory(@Param("inputCategory") String category, @Param("inputOldCategory") String oldCategory);
 //  用id 刪除子分類
-    public int deleteById(int id);
+//    public int deleteById(int id);
     
 }

@@ -20,12 +20,12 @@ public interface NewsDao extends JpaRepository<News, Integer>{
     public int removeByContent(String content);
 //  搜尋新聞(用分類)
     public List<News> findByCategory(String category);
+//  搜尋新聞(用子分類)
+    public List<News> findBySubCategory(String subCategory);
 //  搜尋新聞(用分類+子分類)    
     public List<News> findByCategoryAndSubCategory(String category, String subCategory);
 //  搜尋新聞(用分類)
     public Page<News> findByCategory(Pageable pageable, String category);
-//  搜尋新聞(用子分類)
-    public List<News> findBySubCategory(String subCategory);
 //  搜尋新聞(用子分類)
     public Page<News> findBySubCategory(Pageable pageable, String subCategory);
 //  搜尋新聞(用新聞標題的關鍵字)
@@ -82,14 +82,17 @@ public interface NewsDao extends JpaRepository<News, Integer>{
             + " where n.sub_category = :inputOldSubCategory ", nativeQuery = true)
     public int updateNewsSubCategoryByOldSubCategory(@Param("inputSubCategory") String subCategory, @Param("inputOldSubCategory") String oldSubCategory);
 //  用id 刪除新聞
-    public int deleteById(int id);
+//    public int deleteById(int id);
 //  搜尋新聞(複合條件)
     @Query(value = "SELECT * FROM `news` where "
             + " category = case when :categoryInput is null then category else :categoryInput end and "
             + " sub_category like case when :subCategoryInput is null then '%%' else concat('%',:subCategoryInput,'%') end and "
             + " news_title like case when :newsTitleInput is null then '%%' else concat('%',:newsTitleInput,'%') end and "
             + " news_sub_title like case when :newsSubTitleInput is null then '%%' else concat('%',:newsSubTitleInput,'%') end and "
-            + " release_time >= case when :startTimeInput is null then release_time else :startTimeInput end "
+            + " release_time >= case when :releaseTimeStartInput not REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' then release_time else :releaseTimeStartInput end and "
+            + " release_time <= case when :releaseTimeEndInput not REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' then release_time else :releaseTimeEndInput end and "
+            + " build_time >= case when :buildTimeStartInput not REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' then build_time else :buildTimeStartInput end and "
+            + " build_time <= case when :buildTimeEndInput not REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' then build_time else :buildTimeEndInput end "
             , nativeQuery = true)
     public Page<News> searchNewsByInput(
             Pageable pageable,
@@ -97,7 +100,12 @@ public interface NewsDao extends JpaRepository<News, Integer>{
             @Param("subCategoryInput") String subCategoryInput,
             @Param("newsTitleInput") String newsTitleInput,
             @Param("newsSubTitleInput") String newsSubTitleInput,
-            @Param("startTimeInput") String startTimeInput
+            @Param("releaseTimeStartInput") String releaseTimeStartInput,
+            @Param("releaseTimeEndInput") String releaseTimeEndInput,
+            @Param("buildTimeStartInput") String buildTimeStartInput,
+            @Param("buildTimeEndInput") String buildTimeEndInput
             );
-    
+//  搜尋新聞(用大於發布時間)    
+    public Page<News> findAll(Pageable pageable);
+
 }

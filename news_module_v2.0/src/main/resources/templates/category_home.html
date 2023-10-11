@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://cdn.tailwindcss.com"></script>
-<title>Category Home Page</title>
+<title>カテゴリーのホームページ</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-slate-400">
 
 	<div align="center">
-		<header class="bg-gray-200 p-2">
-		    <span class="text-2xl font-bold mr-48">最新消息模組</span>
+		<header class="bg-gray-200 pb-24">
+		    <span class="text-4xl font-bold absolute top-1 left-1">ニュースシステム</span>
 			<div class="absolute top-1 right-1">
 				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="" href="/client_home/0">切換成'客戶端'</a>
+			    	<a class="" href="/client_home/0">クライアント側へ</a>
 			    </button>
 		    	<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
 			    	<i class="fa-solid fa-house">
@@ -22,48 +22,53 @@
 		    	</button>
 		    	<br/>
 				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="" href="/home/0">新聞</a>
+			    	<a class="" href="/home/0">ニュース</a>
 			    </button>
 				<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-			    	<a class="" href="/sub_category_home/0">子分類</a>
+			    	<a class="" href="/sub_category_home/0">サブカテゴリー</a>
 			    </button>
 	    	</div>
 		</header>
 	    <h1 class="text-3xl font-bold underline">
-	      最新消息:
+	      カテゴリー:
 	    </h1>
 	    
 		<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-	    	<a class="w-full h-full" href="/category_home_all_check">全部勾選</a>
+	    	<a class="w-full h-full" href="/category_home_all_check">全てを選択</a>
 	    </button>
 		<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-	    	<a class="w-full h-full" href="/category_add">New Category</a>
+	    	<a class="w-full h-full" href="/category_add">カテゴリー追加</a>
 	    </button>
 		<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-	    	<a class="w-full h-full" href="/category_edit">Edit Category</a>
+	    	<a class="w-full h-full" href="/category_edit">カテゴリー更新</a>
 	    </button>
 		<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-	    	<a class="w-full h-full" href="/category_delete">Delete Category</a>
+	    	<a class="w-full h-full" href="/category_delete">カテゴリー削除</a>
 	    </button>
-	    
+	    <div>
+		    <span>選択 : 検索結果をチェックして、選択完了ボタンを押す。</span><br/>
+		    <span>更新機能は一つの検索結果を選択ください。</span><br/>
+		    <span>削除機能は複数の検索結果を選択してもらい。</span><br/>
+		    <span>詳細機能は一つの検索結果を選択ください。</span><br/>
+	    </div>
 	    <form action="#" th:action="@{/category_home}" method="post" class="h-screen">
 			
-			<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">勾選完成</button>
+			<button type="submit" class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">選択完了</button>
 					
 					<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-				    	<a class="w-full h-full" href="/category_home_set_pageSize_10">每頁10筆</a>
+				    	<a class="w-full h-full" href="/category_home_set_pageSize_10">各ページ10本</a>
 				    </button>
 					<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-				    	<a class="w-full h-full" href="/category_home_set_pageSize_50">每頁50筆</a>
+				    	<a class="w-full h-full" href="/category_home_set_pageSize_50">各ページ50本</a>
 				    </button>
 					<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-				    	<a class="w-full h-full" href="/category_home_set_pageSize_100">每頁100筆</a>
+				    	<a class="w-full h-full" href="/category_home_set_pageSize_100">各ページ100本</a>
 				    </button>
 					<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-				    	<a class="w-full h-full" href="/category_home_set_asc">降冪</a>
+				    	<a class="w-full h-full" href="/category_home_set_asc">昇順</a>
 				    </button>
 					<button class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative">
-				    	<a class="w-full h-full" href="/category_home_set_desc">升冪</a>
+				    	<a class="w-full h-full" href="/category_home_set_desc">降順</a>
 				    </button>
 				    
 					<div class="flex justify-center">
@@ -173,27 +178,27 @@
 						<div>
 							<table>
 								<tr>
-									<td th:text="分類" class="border border-2 border-black bg-slate-"></td>
-									<td th:text="新聞數量" class="border border-2 border-black"></td>
+									<td th:text="カテゴリー" class="border border-2 border-black bg-slate-"></td>
+									<td th:text="ニュースの数" class="border border-2 border-black"></td>
 								</tr>
 								<tr th:each="item,status : ${categoryPage}">
 									<!-- <td th:text="${status.index}" class="w-24 border border-2 border-black bg-white"></td> -->
 									<td th:text="${item.category}" class="w-24 border border-2 border-black bg-white"></td>
-									<td th:text="${item.newsCount}" class="w-24 border border-2 border-black bg-white"></td>
+									<td th:text="${item.newsCount}" class="w-36 border border-2 border-black bg-white"></td>
 								</tr>
 							</table>
 						    <ul>
 						        <li>
-						            <a th:href="'/category_home/0'">首頁</a>
+						            <a class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative"  th:href="'/category_home/0'">最初のページ</a>
 						        </li>
 						        <li th:if="${categoryPage.hasPrevious()}">
-						            <a th:href="'/category_home/' + ${categoryPage.previousPageable().getPageNumber()}" th:text="上一頁"></a>
+						            <a class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative"  th:href="'/category_home/' + ${categoryPage.previousPageable().getPageNumber()}" th:text="前のページ"></a>
 						        </li>
 						        <li th:if="${categoryPage.hasNext()}">
-						            <a th:href="'/category_home/' + ${categoryPage.nextPageable().getPageNumber()}" th:text="下一頁"></a>
+						            <a class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative"  th:href="'/category_home/' + ${categoryPage.nextPageable().getPageNumber()}" th:text="次のページ"></a>
 						        </li>
 						        <li>
-						            <a th:href="'/category_home/' + ${categoryPage.getTotalPages() - 1}">尾頁</a>
+						            <a class="rounded-full text-white bg-blue-600 px-2 m-2 hover:scale-105 active:scale-95 hover:cursor-pointer relative"  th:href="'/category_home/' + ${categoryPage.getTotalPages() - 1}">最後のページ</a>
 						        </li>
 						    </ul>
 						</div>
@@ -203,7 +208,7 @@
 		</form>
 		
 	    <footer class="py-8 bg-gray-200">
-		 	<p>版權所有© 2023 Github-hibiki4945</p>
+		 	<p>著作権所有© 2023 Github-hibiki4945</p>
 		</footer>
 	</div>
 </body>
