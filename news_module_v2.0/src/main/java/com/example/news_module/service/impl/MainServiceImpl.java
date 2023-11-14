@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class MainServiceImpl implements MainService{
+public class MainServiceImpl implements MainService {
 
     @Autowired
     private NewsDao newsDao;
@@ -30,685 +30,606 @@ public class MainServiceImpl implements MainService{
     private CategoryDao categoryDao;
     @Autowired
     private SubCategoryDao subCategoryDao;
-//  新聞預新增
+
+    //  ニュース追加チェック
     @Override
     public NewsAddResponse newsAddCheck(News news) {
-        
-//      判斷'資料'是否為空
-        if(news == null) {
-//          返回(NewsAddResponse型別)訊息
+
+        //      引数がヌルのチェック
+        if (news == null) {
             return new NewsAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(news.getCategory() == null || news.getCategory().isBlank()) {
-//          if(news.getCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (news.getCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否為空
-        if(news.getSubCategory() == null || news.getSubCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーがヌルのチェック
+        if (news.getSubCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'新聞標題'是否為空
-//      * 不需加上null的判斷
-//      * 可改成StringUtils.isBlank()
-//        if(news.getNewsTitle() == null || news.getNewsTitle().isBlank()) {
-        if(news.getNewsTitle().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      ニュースタイルがヌルのチェック
+        if (news.getNewsTitle().isBlank()) {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'新聞標題'是否超過長度上限
-        if(news.getNewsTitle().length() > 100) {
-//          返回(NewsAddResponse型別)訊息
+        //      ニュースタイルの長さチェック
+        if (news.getNewsTitle().length() > 100) {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'新聞副標題'是否為空
-        if(news.getNewsSubTitle() == null || news.getNewsSubTitle().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
-            return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getMessage(), null);
-        }
-//      判斷'新聞副標題'是否超過長度上限
-        if(news.getNewsSubTitle().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        ////      ニュースのサブタイルがヌルのチェック
+        //        if(news.getNewsSubTitle().isBlank()) {
+        //            return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getMessage(), null);
+        //        }
+        //      ニュースのサブタイルの長さチェック
+        if (news.getNewsSubTitle().length() > 20) {
             return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'發布時間'是否格式錯誤
-        if(!news.getReleaseTime().matches("[\\d]{4}-[\\d]{2}-[\\d]{2}")) {
-//          返回(NewsAddResponse型別)訊息
+        //      発表日のフォーマットチェック
+        if (!news.getReleaseTime().matches("[\\d]{4}-[\\d]{2}-[\\d]{2}")) {
             return new NewsAddResponse(RtnCode.RELEASE_TIME_FORMAT_ERROR.getCode(), RtnCode.RELEASE_TIME_FORMAT_ERROR.getMessage(), null);
         }
-//      判斷'內文'是否為空
-        if(news.getContent() == null || news.getContent().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      コンテンツがヌルのチェック
+        if (news.getContent().isBlank()) {
             return new NewsAddResponse(RtnCode.CONTENT_EMPTY_ERROR.getCode(), RtnCode.CONTENT_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'內文'是否超過長度上限
-        if(news.getContent().length() > 1000) {
-//          返回(NewsAddResponse型別)訊息
+        //      コンテンツの長さチェック
+        if (news.getContent().length() > 1000) {
             return new NewsAddResponse(RtnCode.CONTENT_OVER_LENGTH_ERROR.getCode(), RtnCode.CONTENT_OVER_LENGTH_ERROR.getMessage(), null);
         }
-        
-        
-        
-//      判斷'內文'是否已存在(以內文 作為 判斷新聞是否重複的條件)
-        if(newsDao.existsByContent(news.getContent())) {
-//          返回(NewsAddResponse型別)訊息
+
+        //      コンテンツの既存判断
+        if (newsDao.existsByContent(news.getContent())) {
             return new NewsAddResponse(RtnCode.NEWS_EXISTS_ERROR.getCode(), RtnCode.NEWS_EXISTS_ERROR.getMessage(), null);
         }
 
-//      取得 當前時間
+        //      今の時刻を獲得
         Date date = new Date();
-//      將 date 設定到 news的BuildTime
+        //      BuildTimeに設定
         news.setBuildTime(date);
-        
+
         return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), news);
-        
+
     }
-//  新聞新增
+
+    //  ニュース追加
     @Override
     public NewsAddResponse newsAdd(NewsAddResponse newsAddResponse) {
 
-////      判斷預新增動作 是否正常
-//        if(!newsAddResponse.getCode().matches("200")) {
-//            return new NewsAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
-//        }
         try {
-//          將 新聞資料(news) 存到資料庫
+            //          ニュースを更新
             News res = newsDao.save(newsAddResponse.getNews());
-//          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
         } catch (Exception e) {
-//          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
         }
     }
-//  分類新增
+
+    //  カテゴリー追加
     @Override
     public CategoryAddResponse categoryAdd(Category category) {
-        
-//      判斷'資料'是否為空
-        if(category == null) {
-//          返回(CategoryAddResponse型別)訊息
+
+        //      引数がヌルのチェック
+        if (category == null) {
             return new CategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(category.getCategory() == null || category.getCategory().isBlank()) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (category.getCategory().isBlank()) {
             return new CategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否超過長度上限
-        if(category.getCategory().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      カテゴリーの長さチェック
+        if (category.getCategory().length() > 20) {
             return new CategoryAddResponse(RtnCode.CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否已存在
-        if(categoryDao.existsByCategory(category.getCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーの既存判断
+        if (categoryDao.existsByCategory(category.getCategory())) {
             return new CategoryAddResponse(RtnCode.CATEGORY_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_EXISTS_ERROR.getMessage(), null);
         }
-        
-//      取得 當前時間
+
+        //      今の時刻を獲得
         Date date = new Date();
-//      將 date 設定到 news的BuildTime
+        //      BuildTimeに設定
         category.setBuildTime(date);
-//      新聞數量的初始化
+        //      ニュースの数をゼロにする
         category.setNewsCount(0);
-//      新增分類
+        //      カテゴリー追加
         Category res = categoryDao.save(category);
-        if(res == null) {
+        if (res == null) {
             return new CategoryAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
         }
-//      回傳 成功訊息
+
         return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), res);
-        
+
     }
-//  子分類新增
+
+    //  サブカテゴリー追加
     @Override
     public SubCategoryAddResponse subCategoryAdd(SubCategory subCategory) {
 
-//      判斷'資料'是否為空
-        if(subCategory == null) {
-//          返回(CategoryAddResponse型別)訊息
+        //      引数がヌルのチェック
+        if (subCategory == null) {
             return new SubCategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(subCategory.getCategory() == null || subCategory.getCategory().isBlank()) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (subCategory.getCategory().isBlank()) {
             return new SubCategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否為空
-        if(subCategory.getSubCategory() == null || subCategory.getSubCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーがヌルのチェック
+        if (subCategory.getSubCategory().isBlank()) {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否超過長度上限(20)
-        if(subCategory.getSubCategory().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーの長さチェック
+        if (subCategory.getSubCategory().length() > 20) {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否不存在
-        if(!categoryDao.existsByCategory(subCategory.getCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーの既存判断
+        if (!categoryDao.existsByCategory(subCategory.getCategory())) {
             return new SubCategoryAddResponse(RtnCode.CATEGORY_NOT_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_NOT_EXISTS_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否存在
-        if(subCategoryDao.existsByCategoryAndSubCategory(subCategory.getCategory(), subCategory.getSubCategory())) {
-//        if(subCategoryDao.existsBySubCategory(subCategory.getSubCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      サブカテゴリーの既存判断
+        if (subCategoryDao.existsByCategoryAndSubCategory(subCategory.getCategory(), subCategory.getSubCategory())) {
+
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EXISTS_ERROR.getCode(), RtnCode.SUB_CATEGORY_EXISTS_ERROR.getMessage(), null);
         }
-        
-//      取得 當前時間
+
+        //      今の時刻を獲得
         Date date = new Date();
-//      將 date 設定到 news的BuildTime
+        //      BuildTimeに設定
         subCategory.setBuildTime(date);
-//      新聞數量的初始化
+        //      ニュースの数をゼロに設定
         subCategory.setSubCategoryNewsCount(0);
-//      新增子分類
+        //      サブカテゴリー追加
         SubCategory res = subCategoryDao.save(subCategory);
-//      回傳 成功訊息
+
         return new SubCategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), res);
-        
+
     }
-//  用分類找新聞
+
+    //  カテゴリーでニュースを検索
     @Override
     public Page<News> findPageByCategory(boolean sortDescFlag, int pageNum, int pageSize, String category) {
-//             宣告 排序用變數 
-               Sort sort = null;
-//             當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//             當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-               if(sortDescFlag)
-                   sort = Sort.by(Sort.Direction.DESC , "id");
-               else
-                   sort = Sort.by(Sort.Direction.ASC , "id");
-               Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//             用分類找新聞
-               Page<News> newsList = newsDao.findByCategory(pageable, category);
-//             回傳 搜尋結果
-               return newsList;
-           }
-//  用子分類找新聞
+
+        Sort sort = null;
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
+        else
+            sort = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        //             サブカテゴリーでニュースを検索
+        Page<News> newsList = newsDao.findByCategory(pageable, category);
+
+        return newsList;
+    }
+
+    //  サブカテゴリーでニュースを検索
     @Override
     public Page<News> findPageBySubCategory(boolean sortDescFlag, int pageNum, int pageSize, String subCategory) {
-//      宣告 排序用變數 
+
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用子分類找新聞
+        //      サブカテゴリーでニュースを検索
         Page<News> newsList = newsDao.findBySubCategory(pageable, subCategory);
-//      回傳 搜尋結果
+
         return newsList;
     }
-//  用新聞標題的關鍵字找新聞
+
+    //  ニュースのタイルでニュースを検索
     @Override
     public Page<News> findPageByNewsTitle(boolean sortDescFlag, int pageNum, int pageSize, String newsTitle) {
-//      宣告 排序用變數 
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用新聞標題找新聞
+        //      ニュースのタイルでニュースを検索
         Page<News> newsList = newsDao.findByNewsTitle(pageable, newsTitle);
-//      回傳 搜尋結果
+
         return newsList;
     }
-//  用新聞副標題的關鍵字找新聞
+
+    //  ニュースのサブタイルでニュースを検索
     @Override
     public Page<News> findPageByNewsSubTitle(boolean sortDescFlag, int pageNum, int pageSize, String newsSubTitle) {
-//      宣告 排序用變數 
+
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用新聞副標題找新聞
+        //      ニュースのサブタイルでニュースを検索
         Page<News> newsList = newsDao.findByNewsSubTitle(pageable, newsSubTitle);
-//      回傳 搜尋結果
+
         return newsList;
     }
-//  用大於發布時間找新聞
+
+    //  発表日以降でニュースを検索
     @Override
     public Page<News> findPageByReleaseTimeGreater(boolean sortDescFlag, int pageNum, int pageSize, String date) {
-//      宣告 排序用變數 
+
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用大於發布時間找新聞
+        //      発表日以降でニュースを検索
         Page<News> newsList = newsDao.findByReleaseTimeGreaterThanEqual(pageable, date);
-//      回傳 搜尋結果
+
         return newsList;
     }
-//  用小於發布時間找新聞
+
+    //  発表日以前でニュースを検索
     @Override
     public Page<News> findPageByReleaseTimeLess(boolean sortDescFlag, int pageNum, int pageSize, String date) {
-//      宣告 排序用變數 
-        Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
-        else
-            sort = Sort.by(Sort.Direction.ASC , "id");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用小於發布時間找新聞
-        Page<News> newsList = newsDao.findByReleaseTimeLessThanEqual(pageable, date);
-//      回傳 搜尋結果
-        return newsList;
-    }
-//  用複合條件找新聞
-    @Override
-    public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle, String ReleaseTimeStart, String ReleaseTimeEnd, String BuildTimeStart, String BuildTimeEnd) {
 
-//      宣告 排序用變數 
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用複合條件找新聞
-//        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTime);
-        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTimeStart, ReleaseTimeEnd, BuildTimeStart, BuildTimeEnd);
-//      回傳 搜尋結果
+        //      発表日以前でニュースを検索
+        Page<News> newsList = newsDao.findByReleaseTimeLessThanEqual(pageable, date);
+
         return newsList;
     }
-//  找所有新聞(依照發布日 降冪排序)
+
+    //  複数条件でニュースを検索
+    @Override
+    public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle,
+                                            String ReleaseTimeStart, String ReleaseTimeEnd, String BuildTimeStart, String BuildTimeEnd) {
+
+        Sort sort = null;
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
+        else
+            sort = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        //      複数条件でニュースを検索
+        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTimeStart, ReleaseTimeEnd, BuildTimeStart, BuildTimeEnd);
+
+        return newsList;
+    }
+
+    //  全てのニュースを検索
     @Override
     public Page<News> findPageAll(boolean sortDescFlag, int pageNum, int pageSize) {
 
-//      宣告 排序用變數 
         Sort sort = null;
-//      依照發布日 降冪排序
-        sort = Sort.by(Sort.Direction.DESC , "releaseTime");
+        sort = Sort.by(Sort.Direction.DESC, "releaseTime");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      用複合條件找新聞
-//        Page<News> newsList = newsDao.searchNewsByInput(pageable, Category, SubCategory, NewsTitle, NewsSubTitle, ReleaseTime);
+        //　　　全てのニュースを検索
         Page<News> newsList = newsDao.findAll(pageable);
-//      回傳 搜尋結果
+
         return newsList;
     }
-//  新聞預編輯
+
+    //  ニュース更新チェック
     @Override
     public NewsAddResponse newsEditCheck(News news) {
-//      判斷'資料'是否為空
-        if(news == null) {
-//          返回(NewsAddResponse型別)訊息
+        //      引数がヌルのチェック
+        if (news == null) {
             return new NewsAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(news.getCategory() == null || news.getCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (news.getCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否為空
-        if(news.getSubCategory() == null || news.getSubCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーがヌルのチェック
+        if (news.getSubCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'新聞標題'是否為空
-        if(news.getNewsTitle() == null || news.getNewsTitle().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      ニュースのタイルがヌルのチェック
+        if (news.getNewsTitle().isBlank()) {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'新聞標題'是否超過長度上限
-        if(news.getNewsTitle().length() > 100) {
-//          返回(NewsAddResponse型別)訊息
+        //      ニュースのタイルの長さチェック
+        if (news.getNewsTitle().length() > 100) {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'新聞副標題'是否為空
-        if(news.getNewsSubTitle() == null || news.getNewsSubTitle().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      ニュースのサブタイルがヌルのチェック
+        if (news.getNewsSubTitle().isBlank()) {
             return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'新聞副標題'是否超過長度上限
-        if(news.getNewsSubTitle().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      ニュースのサブタイルがヌルのチェック
+        if (news.getNewsSubTitle().length() > 20) {
             return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'發布時間'是否格式錯誤
-        if(!news.getReleaseTime().matches("[\\d]{4}-[\\d]{2}-[\\d]{2}")) {
-//          返回(NewsAddResponse型別)訊息
+        //      発表日のフォーマットチェック
+        if (!news.getReleaseTime().matches("[\\d]{4}-[\\d]{2}-[\\d]{2}")) {
             return new NewsAddResponse(RtnCode.RELEASE_TIME_FORMAT_ERROR.getCode(), RtnCode.RELEASE_TIME_FORMAT_ERROR.getMessage(), null);
         }
-//      判斷'內文'是否為空
-        if(news.getContent() == null || news.getContent().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      コンテンツがヌルのチェック
+        if (news.getContent().isBlank()) {
             return new NewsAddResponse(RtnCode.CONTENT_EMPTY_ERROR.getCode(), RtnCode.CONTENT_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'內文'是否超過長度上限
-        if(news.getContent().length() > 1000) {
-//          返回(NewsAddResponse型別)訊息
+        //      コンテンツの長さチェック
+        if (news.getContent().length() > 1000) {
             return new NewsAddResponse(RtnCode.CONTENT_OVER_LENGTH_ERROR.getCode(), RtnCode.CONTENT_OVER_LENGTH_ERROR.getMessage(), null);
         }
-        
-//      取得 當前時間
+
+        // 今の時刻を獲得
         Date date = new Date();
-//      將 date 設定到 news的BuildTime
+        //      BuildTimeに設定
         news.setBuildTime(date);
-        
-////      判斷'內文'是否已存在(以內文 作為 判斷新聞是否重複的條件)
-//        if(newsDao.existsByContent(news.getContent())) {
-////          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.NEWS_EXISTS_ERROR.getCode(), RtnCode.NEWS_EXISTS_ERROR.getMessage(), null);
-//        }
-//      回傳 成功訊息
+
         return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), news);
-        
+
     }
-//  新聞編輯
+
+    //  ニュース更新
     @Override
     public NewsAddResponse newsEdit(NewsAddResponse newsAddResponse) {
-//      確認 新聞的預編輯動作 是否正常
-        if(!newsAddResponse.getCode().matches("200")) {
-            return new NewsAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
-        }
+
         try {
-//          將 新聞資料(news) 存到資料庫
-//            News res = newsDao.save(newsAddResponse.getNews());
-             int res = newsDao.updateNewsById(newsAddResponse.getNews().getId(), newsAddResponse.getNews().getCategory(), newsAddResponse.getNews().getSubCategory(), newsAddResponse.getNews().getNewsTitle(), newsAddResponse.getNews().getNewsSubTitle(), newsAddResponse.getNews().getReleaseTime(), newsAddResponse.getNews().getContent());
-//          確認 回傳結果(res)是否正常
-            if(!(res > 0)) {
+            //          ニュース更新
+            //            News res = newsDao.save(newsAddResponse.getNews());
+            int res = newsDao.updateNewsById(newsAddResponse.getNews().getId(), newsAddResponse.getNews().getCategory(), newsAddResponse.getNews().getSubCategory(),
+                    newsAddResponse.getNews().getNewsTitle(), newsAddResponse.getNews().getNewsSubTitle(), newsAddResponse.getNews().getReleaseTime(),
+                    newsAddResponse.getNews().getContent());
+            //         ニュース更新結果のチェック
+            if (!(res > 0)) {
                 return new NewsAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
             }
-//          返回(NewsAddResponse型別)訊息
+
             return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
         } catch (Exception e) {
-//          返回(NewsAddResponse型別)訊息
+
             return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
         }
-        
+
     }
-//  刪除新聞
+
+    //  ニュースを削除
     @Override
     public void newsDelete(int id) {
         try {
-//          將 新聞資料(news) 存到資料庫
-//            News res = newsDao.save(newsAddResponse.getNews());
-             newsDao.deleteById(id);
-//          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
+            //      ニュースを削除
+            newsDao.deleteById(id);
         } catch (Exception e) {
-//          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
         }
     }
-//  搜尋所有分類
+
+    //  全てのカテゴリーを検索
     @Override
     public Page<Category> findCategoryPageByAll(boolean sortDescFlag, int pageNum, int pageSize) {
-//      宣告 排序用變數 
+
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      搜尋所有分類
+        //      全てのカテゴリーを検索
         Page<Category> categoryList = categoryDao.findAll(pageable);
-//      回傳 搜尋結果
+
         return categoryList;
     }
-//  分類編輯
+
+    //  カテゴリー更新
     @Override
     public CategoryAddResponse categoryEdit(Category category) {
-//      判斷'資料'是否為空
-        if(category == null) {
-//          返回(CategoryAddResponse型別)訊息
+        //      引数がヌルのチェック
+        if (category == null) {
             return new CategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(category.getCategory() == null || category.getCategory().isBlank()) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (category.getCategory() == null || category.getCategory().isBlank()) {
             return new CategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否超過長度上限
-        if(category.getCategory().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      カテゴリーの長さチェック
+        if (category.getCategory().length() > 20) {
             return new CategoryAddResponse(RtnCode.CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否已存在
-        if(categoryDao.existsByCategory(category.getCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーの既存判断
+        if (categoryDao.existsByCategory(category.getCategory())) {
             return new CategoryAddResponse(RtnCode.CATEGORY_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_EXISTS_ERROR.getMessage(), null);
         }
-//      更新分類
+        //      カテゴリー更新
         int res = categoryDao.updateCategoryById(category.getId(), category.getCategory(), category.getNewsCount());
-//      確認 更新分類是否成功
-        if(!(res > 0)) {
+        //      カテゴリー更新結果のチェック
+        if (!(res > 0)) {
             return new CategoryAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
         }
-//      回傳 成功訊息
+
         return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), null);
-        
+
     }
-//  更新分類的新聞數量
+
+    //  カテゴリーのニュース数の更新
     @Override
     public CategoryAddResponse categoryEditNewsCount(Category category) {
 
-//      判斷'資料'是否為空
-        if(category == null) {
-//          返回(CategoryAddResponse型別)訊息
+        //      引数がヌルのチェック
+        if (category == null) {
             return new CategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(category.getCategory() == null || category.getCategory().isBlank()) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (category.getCategory().isBlank()) {
             return new CategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否超過長度上限
-        if(category.getCategory().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      カテゴリーの長さチェック
+        if (category.getCategory().length() > 20) {
             return new CategoryAddResponse(RtnCode.CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
 
-//      分類的數量更新
+        //      カテゴリーのニュース数更新
         int res = categoryDao.updateCategoryById(category.getId(), category.getCategory(), category.getNewsCount());
-//      確認 分類的數量更新是否成功
-        if(!(res > 0)) {
+        if (!(res > 0)) {
             return new CategoryAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
         }
-//      回傳 成功訊息
+
         return new CategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), null);
-        
+
     }
-//  刪除分類
+
+    //  カテゴリー削除
     @Override
     public void categoryDelete(int id) {
         try {
-//          將 新聞資料(news) 存到資料庫
-//            News res = newsDao.save(newsAddResponse.getNews());
-             categoryDao.deleteById(id);
-//          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
+            //          カテゴリー削除
+            categoryDao.deleteById(id);
         } catch (Exception e) {
-//          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
         }
-        
+
     }
-//  搜尋所有子分類
+
+    //  全てのサブカテゴリーを検索
     @Override
     public Page<SubCategory> findSubCategoryPageByAll(boolean sortDescFlag, int pageNum, int pageSize) {
-//      宣告 排序用變數 
+        
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      搜尋所有子分類
+        //      全てのサブカテゴリーを検索
         Page<SubCategory> subCategoryList = subCategoryDao.findAll(pageable);
-//      回傳 搜尋結果
+
         return subCategoryList;
     }
-//  搜尋子分類(用分類)
+
+    // 　カテゴリーでサブカテゴリーを検索
     @Override
     public Page<SubCategory> findSubCategoryPageByCategory(boolean sortDescFlag, int pageNum, int pageSize, String category) {
-//      宣告 排序用變數 
+        
         Sort sort = null;
-//      當降冪排序的Flag為true 則設為降冪排序(根據新聞的id 做排序)
-//      當降冪排序的Flag為false 則設為升冪排序(根據新聞的id 做排序)
-        if(sortDescFlag)
-            sort = Sort.by(Sort.Direction.DESC , "id");
+        if (sortDescFlag)
+            sort = Sort.by(Sort.Direction.DESC, "id");
         else
-            sort = Sort.by(Sort.Direction.ASC , "id");
+            sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-//      搜尋子分類(用分類)
+        //      カテゴリーでサブカテゴリーを検索
         Page<SubCategory> subCategoryList = subCategoryDao.findByCategory(pageable, category);
-//      回傳 搜尋結果
+
         return subCategoryList;
     }
-//  編輯子分類
+
+    //  サブカテゴリー更新
     @Override
     public SubCategoryAddResponse subCategoryEdit(SubCategory subCategory) {
 
-//      判斷'資料'是否為空
-        if(subCategory == null) {
-//          返回(CategoryAddResponse型別)訊息
+        //      引数がヌルのチェック
+        if (subCategory == null) {
             return new SubCategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(subCategory.getCategory() == null || subCategory.getCategory().isBlank()) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (subCategory.getCategory().isBlank()) {
             return new SubCategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否為空
-        if(subCategory.getSubCategory() == null || subCategory.getSubCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーがヌルのチェック
+        if (subCategory.getSubCategory().isBlank()) {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否超過長度上限(20)
-        if(subCategory.getSubCategory().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーの長さチェック
+        if (subCategory.getSubCategory().length() > 20) {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否不存在
-        if(!categoryDao.existsByCategory(subCategory.getCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーの既存判断
+        if (!categoryDao.existsByCategory(subCategory.getCategory())) {
             return new SubCategoryAddResponse(RtnCode.CATEGORY_NOT_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_NOT_EXISTS_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否存在(記得改回(subCategoryDao.existsById))
-        if(subCategoryDao.existsByCategoryAndSubCategory(subCategory.getCategory(), subCategory.getSubCategory())) {
-//        if(subCategoryDao.existsBySubCategory(subCategory.getSubCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーとサブカテゴリーの既存判断
+        if (subCategoryDao.existsByCategoryAndSubCategory(subCategory.getCategory(), subCategory.getSubCategory())) {
             return new SubCategoryAddResponse(RtnCode.NO_CHANGE_ERROR.getCode(), RtnCode.NO_CHANGE_ERROR.getMessage(), null);
         }
-        
-//      更新子分類
+
+        //      サブカテゴリー更新
         int res = subCategoryDao.updateSubCategoryById(subCategory.getId(), subCategory.getCategory(), subCategory.getSubCategory());
-//      確認 更新是否正常
-        if(!(res > 0)) {
+        //      サブカテゴリー更新結果のチェック
+        if (!(res > 0)) {
             return new SubCategoryAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
         }
-//      回傳 成功訊息
+
         return new SubCategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), null);
-        
+
     }
-//  刪除子分類
+
+    //  サブカテゴリー削除
     @Override
     public void subCategoryDelete(int id) {
         try {
-             subCategoryDao.deleteById(id);
-//          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
-        } catch (Exception e) {
-//          返回(NewsAddResponse型別)訊息
-//            return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
+            subCategoryDao.deleteById(id);
+         } catch (Exception e) {
         }
-        
+
     }
-//  搜尋新聞(用分類)
+
+    //  カテゴリーでニュースを検索
     @Override
     public List<News> findByCategory(String category) {
         List<News> newsList = newsDao.findByCategory(category);
         return newsList;
     }
-//  搜尋新聞(用子分類)
+
+    //  サブカテゴリーでニュースを検索
     @Override
     public List<News> findBySubCategory(String subCategory) {
         List<News> newsList = newsDao.findBySubCategory(subCategory);
         return newsList;
     }
-//  搜尋所有分類
+
+    //  全てのカテゴリーを検索
     @Override
     public List<Category> findCategoryByAll() {
         List<Category> categoryList = categoryDao.findAll();
         return categoryList;
     }
-//  搜尋子分類(用分類)
+
+    //  カテゴリーでサブカテゴリーを検索
     @Override
     public List<SubCategory> findSubCategoryByCategory(String category) {
         List<SubCategory> subCategoryList = subCategoryDao.findByCategory(category);
         return subCategoryList;
     }
-//  搜尋新聞(用分類+子分類)
+
+    //  カテゴリーとサブカテゴリーでニュースを検索
     @Override
     public List<News> findByCategoryAndSubCategory(String category, String subCategory) {
         List<News> newsList = newsDao.findByCategoryAndSubCategory(category, subCategory);
         return newsList;
     }
-//  更新子分類的新聞數量
+
+    //  サブカテゴリーのニュース数を更新
     @Override
     public SubCategoryAddResponse subCategoryEditNewsCount(SubCategory subCategory) {
 
-//      判斷'資料'是否為空
-        if(subCategory == null) {
-//          返回(CategoryAddResponse型別)訊息
+        //      引数がヌルのチェック
+        if (subCategory == null) {
             return new SubCategoryAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否為空
-        if(subCategory.getCategory() == null || subCategory.getCategory().isBlank()) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーがヌルのチェック
+        if (subCategory.getCategory().isBlank()) {
             return new SubCategoryAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否為空
-        if(subCategory.getSubCategory() == null || subCategory.getSubCategory().isBlank()) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーがヌルのチェック
+        if (subCategory.getSubCategory().isBlank()) {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
-//      判斷'子分類'是否超過長度上限(20)
-        if(subCategory.getSubCategory().length() > 20) {
-//          返回(NewsAddResponse型別)訊息
+        //      サブカテゴリーの長さチェック
+        if (subCategory.getSubCategory().length() > 20) {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getCode(), RtnCode.SUB_CATEGORY_OVER_LENGTH_ERROR.getMessage(), null);
         }
-//      判斷'分類'是否不存在
-        if(!categoryDao.existsByCategory(subCategory.getCategory())) {
-//          返回(CategoryAddResponse型別)訊息
+        //      カテゴリーの既存判断
+        if (!categoryDao.existsByCategory(subCategory.getCategory())) {
             return new SubCategoryAddResponse(RtnCode.CATEGORY_NOT_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_NOT_EXISTS_ERROR.getMessage(), null);
         }
-        
-//      更新 子分類的新聞數量
-        int res = subCategoryDao.updateSubCategoryNewsCountById(subCategory.getId(), subCategory.getCategory(), subCategory.getSubCategory(), subCategory.getSubCategoryNewsCount());
-//      判斷 子分類的新聞數量的更新 是否成功
-        if(!(res > 0)) {
+
+        //      サブカテゴリーのニュース数を更新
+        int res = subCategoryDao.updateSubCategoryNewsCountById(subCategory.getId(), subCategory.getCategory(), subCategory.getSubCategory(),
+                subCategory.getSubCategoryNewsCount());
+        //      サブカテゴリーのニュース数を更新結果のチェック
+        if (!(res > 0)) {
             return new SubCategoryAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
         }
-//      回傳 成功訊息
+
         return new SubCategoryAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), null);
-        
+
     }
 
 }
