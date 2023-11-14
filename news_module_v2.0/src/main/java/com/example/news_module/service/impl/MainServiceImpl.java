@@ -41,6 +41,7 @@ public class MainServiceImpl implements MainService{
         }
 //      判斷'分類'是否為空
         if(news.getCategory() == null || news.getCategory().isBlank()) {
+//          if(news.getCategory().isBlank()) {
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
@@ -50,7 +51,10 @@ public class MainServiceImpl implements MainService{
             return new NewsAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
 //      判斷'新聞標題'是否為空
-        if(news.getNewsTitle() == null || news.getNewsTitle().isBlank()) {
+//      * 不需加上null的判斷
+//      * 可改成StringUtils.isBlank()
+//        if(news.getNewsTitle() == null || news.getNewsTitle().isBlank()) {
+        if(news.getNewsTitle().isBlank()) {
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.NEWS_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage(), null);
         }
@@ -85,10 +89,6 @@ public class MainServiceImpl implements MainService{
             return new NewsAddResponse(RtnCode.CONTENT_OVER_LENGTH_ERROR.getCode(), RtnCode.CONTENT_OVER_LENGTH_ERROR.getMessage(), null);
         }
         
-//      取得 當前時間
-        Date date = new Date();
-//      將 date 設定到 news的BuildTime
-        news.setBuildTime(date);
         
         
 //      判斷'內文'是否已存在(以內文 作為 判斷新聞是否重複的條件)
@@ -96,6 +96,12 @@ public class MainServiceImpl implements MainService{
 //          返回(NewsAddResponse型別)訊息
             return new NewsAddResponse(RtnCode.NEWS_EXISTS_ERROR.getCode(), RtnCode.NEWS_EXISTS_ERROR.getMessage(), null);
         }
+
+//      取得 當前時間
+        Date date = new Date();
+//      將 date 設定到 news的BuildTime
+        news.setBuildTime(date);
+        
         return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), news);
         
     }
@@ -103,10 +109,10 @@ public class MainServiceImpl implements MainService{
     @Override
     public NewsAddResponse newsAdd(NewsAddResponse newsAddResponse) {
 
-//      判斷預新增動作 是否正常
-        if(!newsAddResponse.getCode().matches("200")) {
-            return new NewsAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
-        }
+////      判斷預新增動作 是否正常
+//        if(!newsAddResponse.getCode().matches("200")) {
+//            return new NewsAddResponse(RtnCode.DATA_ERROR.getCode(), RtnCode.DATA_ERROR.getMessage(), null);
+//        }
         try {
 //          將 新聞資料(news) 存到資料庫
             News res = newsDao.save(newsAddResponse.getNews());

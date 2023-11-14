@@ -91,129 +91,109 @@ public class MainController {
     private SubCategoryDao subCateogryDao;
     
     //////////////////////////////////////////////////
-//  管理端的新聞主頁
+//  ニュースのホームページ
     @RequestMapping(value = "/home/{pageNum}")
-    public String Home(@PathVariable(value="pageNum",required=false) int pageNum, Model model) {
-//        搜尋結果為零時 防止頁數為負
+    public String Home(@PathVariable(value="pageNum",required=false) int pageNum, 
+                       Model model) {
+//        検索結果が無し場合、ページがマイナスになるのを防止する
           if(pageNum == -1)
               pageNum = 0;
-//        將目前頁數暫存 更新到目前頁數
+//        今のページをpageNumTempに保存する
           pageNumTemp = pageNum;
         
-//        (開始)新聞的搜尋的初始化設定
-//          新建一個 新聞的分類搜尋的輸入用變數
+//          カテゴリーでニュース検索用の変数を初期化する
             News news01 = new News();
-//          新建一個 新聞的子分類搜尋的輸入用變數
+//          サブカテゴリーでニュース検索用の変数を初期化する
             News news02 = new News();
-//          新建一個 新聞的新聞標題搜尋的輸入用變數
+//          ニュースタイルでニュース検索用の変数を初期化する
             News news03 = new News();
-//          新建一個 新聞的新聞副標題搜尋的輸入用變數
+//          ニュースのサブタイルでニュース検索用の変数を初期化する
             News news04 = new News();
-//          新建一個 新聞的開始時間搜尋的輸入用變數
+//          発表日以降でニュース検索用の変数を初期化する
             News news05 = new News();
-//          新建一個 新聞的結束時間搜尋的輸入用變數
+//          発表日以前でニュース検索用の変数を初期化する
             News news06 = new News();
-//          新建一個 新聞的複合搜尋的輸入用變數
+//          複数条件でニュース検索用の変数を初期化する
             MultipleSearch news07 = new MultipleSearch();
-//        (結束)新聞的搜尋的初始化設定
 
-//        (開始)新聞的搜尋的初始值設定
-//          新聞的分類搜尋
-            if(lastSearch == 1)// 取得 新聞的分類的搜尋結果
+//          カテゴリーでニュース検索
+            if(lastSearch == 1)
                 news01.setCategory(lastKeyWordStr);
-//          新聞的子分類搜尋
-            if(lastSearch == 2)// 取得 新聞的子分類的搜尋結果
+//          サブカテゴリーでニュース検索
+            if(lastSearch == 2)
                 news02.setSubCategory(lastKeyWordStr);  
-//          新聞的新聞標題搜尋
-            if(lastSearch == 3)// 取得 新聞的新聞標題的搜尋結果
+//          ニュースタイルでニュース検索
+            if(lastSearch == 3)
                 news03.setNewsTitle(lastKeyWordStr);  
-//          新聞的新聞副標題搜尋
-            if(lastSearch == 4)// 取得 新聞的新聞副標題的搜尋結果
+//          ニュースのサブタイルでニュース検索
+            if(lastSearch == 4)
                 news04.setNewsSubTitle(lastKeyWordStr);
-//          新聞的開始時間搜尋
-            if(lastSearch == 5)// 取得 新聞的開始時間的搜尋結果
+//          発表日以降でニュース検索
+            if(lastSearch == 5)
                 news05.setReleaseTime(lastKeyWordStr);
-//          新聞的結束時間搜尋
-            if(lastSearch == 6)// 取得 新聞的結束時間的搜尋結果
+//          発表日以前でニュース検索
+            if(lastSearch == 6)
                 news06.setReleaseTime(lastKeyWordStr);
-//          新聞的複合搜尋 // 20231007(記得加上(暫存資料))
-            if(lastSearch == 7)// 取得 新聞的結束時間的搜尋結果(測試用)
+//          複数条件でニュース検索
+            if(lastSearch == 7)
                 news07 = lastKeyWordMultipleStr;
-//        (結束)新聞的搜尋的初始值設定
             
-//        (開始)新聞的搜尋的Thymeleaf傳入設定
-//          新建一個 新聞的分類搜尋的輸入用變數
+//          ニュース検索用の変数をThymeleafに設定する
             model.addAttribute("news01", news01);
-//          新建一個 新聞的子分類搜尋的輸入用變數
             model.addAttribute("news02", news02);
-//          新建一個 新聞的新聞標題搜尋的輸入用變數
             model.addAttribute("news03", news03);
-//          新建一個 新聞的新聞副標題搜尋的輸入用變數
             model.addAttribute("news04", news04);
-//          新建一個 新聞的開始時間搜尋的輸入用變數
             model.addAttribute("news05", news05);
-//          新建一個 新聞的結束時間搜尋的輸入用變數
             model.addAttribute("news06", news06);
-//          新建一個 新聞的複合搜尋的輸入用變數
             model.addAttribute("news07", news07);
-//        (結束)新聞的搜尋的Thymeleaf傳入設定
 
-//        (開始)分類列表的初始化設定
-//          將 新聞的分類選擇框用的List 傳到Thymeleaf
+//　　　　　　ニュースのカテゴリーをThymeleafに設定する
             model.addAttribute("categoryList", categoryListInitializer());
-//        (結束)分類列表的初始化設定
-            
-//        (開始)子分類列表的初始化設定
-//          將 新聞的子分類選擇框用的List 傳到Thymeleaf
+
+//          ニュースのサブカテゴリーをThymeleafに設定する
             model.addAttribute("subCategoryList", subCategoryListInitializer());
-//        (結束)子分類列表的初始化設定
-          
-//        (開始)勾選設定
-//          新建一個 勾選結果儲存用的變數
+
+//          チェックボックスの入力用変数を初期化する
             CheckedRes checkedRes = new CheckedRes();
-//          將 勾選結果儲存用的變數 傳到Thymeleaf
+//          チェックボックスの入力用変数をThymeleafに設定する
             model.addAttribute("checkedRes", checkedRes);
-//        (結束)勾選設定
 
-//        (開始)分頁設定
-//          將 每頁最大顯示結果的筆數 改為10筆
-//            pageSize = 10;
-//          將 目前所選擇的頁數(判斷用) 傳到Thymeleaf
+//          今のページの変数をThymeleafに設定する
             model.addAttribute("pageNum", pageNum);
-//          將 每頁最大顯示結果的筆數(判斷用) 傳到Thymeleaf
+//          各ページの本数の変数をThymeleafに設定する
             model.addAttribute("pageSize", pageSize);
-//        (結束)分頁設定
 
-//        (開始)新聞搜尋結果的設定
-//          將 新聞的搜尋結果的Page(顯示用) 傳到Thymeleaf
+//          ニュースの検索結果をThymeleafに設定する
             model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
-//          將 新聞的搜尋結果的Page的總筆數(判斷用) 傳到Thymeleaf
-            model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-//        (結束)新聞搜尋結果的設定
-            
-//      分類&子分類的新聞數量更新(變數宣告)
+//          ニュースの検索結果の各ページの本数をThymeleafに設定する
+            model.addAttribute("newsPageSize", 
+                    NewsSearch(pageNum, pageSize).getNumberOfElements());
+
+//      カテゴリーとサブカテゴリーのニュースの数を更新する
         List<Category> findCategoryByAllRes = null;
         List<News> findByCategoryRes = null;
         List<News> findByCategoryAndSubCategoryRes = null;
         List<SubCategory> findSubCategoryByCategoryRes = null;
         int newsCount = 0;
-//      分類&子分類的新聞數量更新
         findCategoryByAllRes = mainService.findCategoryByAll();
         for (Category item : findCategoryByAllRes) {
             findByCategoryRes = mainService.findByCategory(item.getCategory());
             newsCount = findByCategoryRes.size();
             item.setNewsCount(newsCount);
             mainService.categoryEditNewsCount(item);
-            findSubCategoryByCategoryRes = mainService.findSubCategoryByCategory(item.getCategory());
+            findSubCategoryByCategoryRes 
+                = mainService.findSubCategoryByCategory(item.getCategory());
             for (SubCategory item02 : findSubCategoryByCategoryRes) {
-                findByCategoryAndSubCategoryRes = mainService.findByCategoryAndSubCategory(item02.getCategory(), item02.getSubCategory());
+                findByCategoryAndSubCategoryRes 
+                    = mainService.findByCategoryAndSubCategory(item02.getCategory(), 
+                            item02.getSubCategory());
                 newsCount = findByCategoryAndSubCategoryRes.size();
                 item02.setSubCategoryNewsCount(newsCount);
                 mainService.subCategoryEditNewsCount(item02);
             }
         }
             
-//      返回 管理端的新聞主頁
+//      ニュースのホームページに移動する
         return "home";
     }
 //  管理端的新聞主頁(用分類搜尋)
@@ -1311,7 +1291,7 @@ public class MainController {
     @PostMapping("/news_add")
     public String NewsAdd(@ModelAttribute("news") News news, Model model) {
 //      進行 新聞的新增動作
-        NewsAddResponse res = mainService.newsEditCheck(news);
+        NewsAddResponse res = mainService.newsAddCheck(news);
 //      判斷 新聞的編輯動作是否失敗
         if(res.getCode() != "200") {
 //          將 新聞的分選擇的暫存 更新為最新選擇的分類
@@ -1492,12 +1472,12 @@ public class MainController {
     @PostMapping("/news_add_preview")
     public String NewsAddPreview(Model model) {
 //      判斷 新增新聞的動作是否失敗
-        if(newsAddCheckData.getCode() != "200") {
-//          將錯誤訊息 傳到Thymeleaf
-            model.addAttribute("error", newsAddCheckData.getMessage());
-//          跳轉到 新增新聞的預覽頁面
-            return "news_add_preview";
-        }
+//        if(newsAddCheckData.getCode() != "200") {
+////          將錯誤訊息 傳到Thymeleaf
+//            model.addAttribute("error", newsAddCheckData.getMessage());
+////          跳轉到 新增新聞的預覽頁面
+//            return "news_add_preview";
+//        }
 //      進行 新聞的新增動作
         newsAddCheckData = mainService.newsAdd(newsAddCheckData);
 //      判斷 新聞的新增動作是否失敗

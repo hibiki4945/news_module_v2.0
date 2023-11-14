@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 public interface NewsDao extends JpaRepository<News, Integer>{
-//  用內文 判斷新聞是否重複
+//  コンテンツでニュースが既にあるかどうかを判断する。
     public boolean existsByContent(String content);
 //  用內文 刪除新聞
     public int removeByContent(String content);
