@@ -1683,7 +1683,7 @@ public class MainController {
 
         model.addAttribute("newsPage", NewsSearch(pageNum, pageSize));
         model.addAttribute("newsPageSize", NewsSearch(pageNum, pageSize).getNumberOfElements());
-        
+
         //      チェックしてないを判断
         if (checkedResTemp == null)
             return "home";
@@ -1921,10 +1921,10 @@ public class MainController {
         //      チェック用
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        
+
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        
+
         Page<Category> categoryPage = null;
         //      全てのカテゴリーを検索
         categoryPage = mainService.findCategoryPageByAll(sortDescFlag, pageNum, pageSize);
@@ -1937,9 +1937,9 @@ public class MainController {
         List<News> findByCategoryRes = null;
         List<News> findByCategoryAndSubCategoryRes = null;
         List<SubCategory> findSubCategoryByCategoryRes = null;
-        
+
         int newsCount = 0;
-//      カテゴリーとサブカテゴリーのニュース数を更新
+        //      カテゴリーとサブカテゴリーのニュース数を更新
         findCategoryByAllRes = mainService.findCategoryByAll();
         for (Category item : findCategoryByAllRes) {
             findByCategoryRes = mainService.findByCategory(item.getCategory());
@@ -1961,7 +1961,7 @@ public class MainController {
     //  カテゴリーのチェック結果を確認    
     @PostMapping("/category_home")
     public String CategoryHomeChecked(@ModelAttribute("checkedRes") CheckedRes checkedRes, Model model) {
-        
+
         checkedResTemp = checkedRes;
         checkedResTempCount = 0;
         if (checkedRes.isChecked1())
@@ -2182,7 +2182,7 @@ public class MainController {
     //  カテゴリーの全ての検索結果をチェック
     @RequestMapping(value = "/category_home_all_check")
     public String categoryHomeAllCheck(Model model) {
-        
+
         CheckedRes checkedRes = new CheckedRes();
         checkedRes.setChecked1(true);
         checkedRes.setChecked2(true);
@@ -2295,7 +2295,7 @@ public class MainController {
         CategoryListTemp = categoryPage.getContent();
         model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("categoryPageSize", categoryPage.getNumberOfElements());
-        
+
         return "category_home";
     }
 
@@ -2306,7 +2306,7 @@ public class MainController {
         Category categoryInput = new Category();
         model.addAttribute("categoryInput", categoryInput);
         model.addAttribute("error", "");
-        
+
         return "category_add";
 
     }
@@ -2321,7 +2321,7 @@ public class MainController {
             model.addAttribute("error", res.getMessage());
             return "category_add";
         }
-        
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
         //      今のページをゼロに設定
@@ -2333,14 +2333,14 @@ public class MainController {
         categoryPage = mainService.findCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("categoryPageSize", categoryPage.getNumberOfElements());
-        
+
         return "category_home";
     }
 
     //  カテゴリー更新
     @RequestMapping(value = "/category_edit")
     public String CategoryEdit(Model model) {
-        
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
         //      今のページをゼロに設定
@@ -2641,60 +2641,60 @@ public class MainController {
         return "category_edit";
     }
 
-    //  管理端的分類預編輯動作(提交)
+    //  カテゴリー更新
     @PostMapping("/category_edit")
     public String CategoryEditPost(@ModelAttribute("category") String category01, Model model) {
-        //      準備 編輯用的分類型別的變數
+
         Category category = new Category();
         category.setId(categoryIdTemp);
         category.setCategory(category01);
-        //      分類的id的初始化
+
         categoryIdTemp = 0;
-        //      進行 分類的編輯動作
+        //      カテゴリー更新
         CategoryAddResponse res = mainService.categoryEdit(category);
         if (res.getCode() != "200") {
             model.addAttribute("category", category);
             model.addAttribute("error", res.getMessage());
             return "category_edit";
         }
-        //      更新 對應分類&子分類的新聞數量
+        //      カテゴリーとサブカテゴリーのニュース数を更新
         newsDao.updateNewsCategoryByOldCategory(category01, oldCategoryTemp);
         subCateogryDao.updateSubCategoryCategoryByOldCategory(category01, oldCategoryTemp);
-        //      勾選結果的初始化
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      搜尋所有分類 再傳到Thymeleaf
+        //      全てのカテゴリーを検索
         Page<Category> categoryPage = null;
         categoryPage = mainService.findCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("categoryPageSize", categoryPage.getNumberOfElements());
-        //      跳轉到分類的主頁
+
         return "category_home";
     }
 
-    //  管理端的分類刪除動作
+    //  カテゴリー削除
     @RequestMapping(value = "/category_delete")
     public String CategoryDelete(Model model) {
-        //        勾選結果的初始化
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //        頁數的初始化
+        //        今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //        搜尋所有的分類 再傳到Thymeleaf
+        //        全てのカテゴリーを検索
         Page<Category> categoryPage = null;
         categoryPage = mainService.findCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("categoryPageSize", categoryPage.getNumberOfElements());
-        //        未勾選 則返回分類的主頁
+        //        チェックしてないを判断
         if (checkedResTemp == null)
             return "category_home";
-        //        統計 勾選結果
+        //        チェック結果を確認
         int[] checked = new int[100];
         for (int i = 0; i < 100; i++) {
             checked[i] = 0;
@@ -2959,7 +2959,7 @@ public class MainController {
             checked[98] = 1;
         if (checkedResTemp.isChecked100() && pageNumTemp == 0)
             checked[99] = 1;
-        //        找到勾選的分類 再做刪除
+        //        チェックした検索結果を削除
         int counter = 0;
         for (Category item : CategoryListTemp) {
             if (checked[counter] == 1 && item.getNewsCount() == 0) {
@@ -2971,30 +2971,30 @@ public class MainController {
         }
 
         categoryPage = null;
-        //        搜尋 刪除後的所有分類 再傳到Thymeleaf
+        //        全てのカテゴリーを検索
         categoryPage = mainService.findCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         model.addAttribute("categoryPage", categoryPage);
         model.addAttribute("categoryPageSize", categoryPage.getNumberOfElements());
-        //        勾選結果的初始化
+
         checkedResTemp = null;
-        //        跳轉到分類的主頁
+
         return "category_home";
     }
 
     //////////////////////////////////////////////////
-    //  管理端的子分類主頁
+    //  サブカテゴリーのホームページ
     @RequestMapping(value = "/sub_category_home/{pageNum}")
     public String subCategoryHome(@PathVariable(value = "pageNum", required = false) int pageNum, Model model) {
-        //      搜尋結果為零時 防止頁數為負
+        //      pageNumがマイナスにならないように
         if (pageNum == -1)
             pageNum = 0;
-        //      勾選用變數的初始化
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      找到所有分類 再傳到Thymeleaf
+        //      全てのカテゴリーを検索
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3003,13 +3003,12 @@ public class MainController {
         model.addAttribute("categoryList", categoryList);
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //      搜尋完子分類 再傳到Thymeleaf        
+
         Page<SubCategory> subCategoryPage = null;
-        //      預設搜尋
+        //      サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //     分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
@@ -3018,13 +3017,13 @@ public class MainController {
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
         model.addAttribute("subCategoryPage", subCategoryPage);
 
-        //      分類&子分類的新聞數量更新(變數宣告)
         List<Category> findCategoryByAllRes = null;
         List<News> findByCategoryRes = null;
         List<News> findByCategoryAndSubCategoryRes = null;
         List<SubCategory> findSubCategoryByCategoryRes = null;
         int newsCount = 0;
-        //      分類&子分類的新聞數量更新
+
+        //      カテゴリーとサブカテゴリーのニュース数を更新
         findCategoryByAllRes = mainService.findCategoryByAll();
         for (Category item : findCategoryByAllRes) {
             findByCategoryRes = mainService.findByCategory(item.getCategory());
@@ -3039,14 +3038,14 @@ public class MainController {
                 mainService.subCategoryEditNewsCount(item02);
             }
         }
-        //      跳轉到子分類的主頁
+
         return "sub_category_home";
     }
 
-    //  管理端的子分類主頁的勾選動作 
+    //  サブカテゴリーのチェック結果を確認 
     @PostMapping("/sub_category_home")
     public String SubCategoryHomeChecked(@ModelAttribute("checkedRes") CheckedRes checkedRes, Model model) {
-        //      勾選結果的統計
+
         checkedResTemp = checkedRes;
         checkedResTempCount = 0;
         if (checkedRes.isChecked1())
@@ -3249,11 +3248,11 @@ public class MainController {
             checkedResTempCount++;
         if (checkedRes.isChecked100())
             checkedResTempCount++;
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      找到所有分類 再傳到Thymeleaf
+        //      全てのカテゴリーを検索
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3262,27 +3261,26 @@ public class MainController {
         model.addAttribute("categoryList", categoryList);
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //      搜尋子分類 再將結果傳到Thymeleaf
+
         Page<SubCategory> subCategoryPage = null;
-        //      預設搜尋
+        //      サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //     分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
         SubCategoryListTemp = subCategoryPage.getContent();
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //      跳轉到子分類的主頁
+
         return "sub_category_home";
     }
 
-    //  管理端的子分類主頁的全選動作
+    //  サブカテゴリーの全ての検索結果をチェック
     @RequestMapping(value = "/sub_category_home_all_check")
     public String subCategoryHomeAllCheck(Model model) {
-        //      勾選結果的全選動作
+
         CheckedRes checkedRes = new CheckedRes();
         checkedRes.setChecked1(true);
         checkedRes.setChecked2(true);
@@ -3385,11 +3383,11 @@ public class MainController {
         checkedRes.setChecked99(true);
         checkedRes.setChecked100(true);
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      準備 選擇用的分類列表
+
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3398,13 +3396,12 @@ public class MainController {
         model.addAttribute("categoryList", categoryList);
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //      搜尋子分類 再傳到Thymeleaf
+
         Page<SubCategory> subCategoryPage = null;
-        //      預設搜尋
+        //      サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //     分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
@@ -3412,14 +3409,14 @@ public class MainController {
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
         model.addAttribute("subCategoryPage", subCategoryPage);
-        //      跳轉到 子分類的主頁
+
         return "sub_category_home";
     }
 
-    //  管理端的子分類主頁(用分類搜尋)    
+    //  カテゴリーでサブカテゴリーを検索    
     @PostMapping("/sub_category_home_search_category")
     public String SubCategoryHomeSearchCategory(@ModelAttribute("subCategory") SubCategory subCategory, Model model) {
-        //        準備 選擇用的分類列表
+
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3427,54 +3424,54 @@ public class MainController {
         }
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("subCategory", subCategory);
-        //      勾選結果的初始化
+        //      チェック用
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      用選擇的分類搜尋子分類 再將結果傳到Thymeleaf
+        //      カテゴリーでサブカテゴリーを検索
         Page<SubCategory> subCategoryPage = mainService.findSubCategoryPageByCategory(sortDescFlag, pageNum, pageSize, subCategory.getCategory());
         subCategoryLastSearch = 1;
         subCategorylastKeyWordStr = subCategory.getCategory();
         SubCategoryListTemp = subCategoryPage.getContent();
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //      跳轉到子分類的主頁 
+
         return "sub_category_home";
 
     }
 
-    //  管理端的子分類新增動作(填寫)
+    //  サブカテゴリー追加
     @RequestMapping(value = "/sub_category_add")
     public String subCategoryAdd(Model model) {
-        //      輸入用變數的初始化
+
         SubCategory subCategoryInput = new SubCategory();
         model.addAttribute("subCategoryInput", subCategoryInput);
         model.addAttribute("error", "");
-        //      準備 選擇用的分類列表
+
         List<Category> res = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res) {
             categoryList.add(item.getCategory());
         }
         model.addAttribute("categoryList", categoryList);
-        //      跳轉到新增子分類的頁面
+
         return "sub_category_add";
     }
 
-    //  管理端的子分類新增動作(提交)  
+    //  サブカテゴリー追加  
     @PostMapping("/sub_category_add")
     public String subCategoryAdd(@ModelAttribute("subCategoryInput") SubCategory subCategoryInput, Model model) {
-        //      勾選結果的初始化
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      準備 選擇用的分類列表
+
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3483,68 +3480,67 @@ public class MainController {
         model.addAttribute("categoryList", categoryList);
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //      新增子分類 並確認是否成功
+        //      サブカテゴリー追加
         SubCategoryAddResponse res = mainService.subCategoryAdd(subCategoryInput);
+        //      サブカテゴリー追加結果を確認
         if (res.getCode() != "200") {
             model.addAttribute("error", res.getMessage());
             return "sub_category_add";
         }
-        //      搜尋子分類 再將結果傳到Thymeleaf
+
         Page<SubCategory> subCategoryPage = null;
-        //      預設搜尋
+        //      サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //     分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
         SubCategoryListTemp = subCategoryPage.getContent();
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //      跳轉到子分類的主頁
+
         return "sub_category_home";
     }
 
-    //  管理端的子分類編輯動作(填寫)
+    //  サブカテゴリー更新
     @RequestMapping(value = "/sub_category_edit")
     public String subCategoryEdit(Model model) {
-        //      準備 選擇用的分類列表
+
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
             categoryList.add(item.getCategory());
         }
         model.addAttribute("categoryList", categoryList);
-        //      勾選結果的初始化
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      輸入用變數的初始化
+
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //      搜尋子分類 再傳到Thymeleaf
+
         Page<SubCategory> subCategoryPage = null;
-        //      預設搜尋
+        //      サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //     分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //      未勾選 則返回子分類主頁
+        //      チェックしてないを判断
         if (checkedResTemp == null)
             return "sub_category_home";
-        //      勾選2個以上 則返回子分類主頁
+        //      二つ以上チェックしたを判断
         if (checkedResTempCount >= 2)
             return "sub_category_home";
-        //      統計 勾選結果
+        //      チェックの結果を確認
         int counter0 = 0;
         int counter = 0;
         if ((checkedResTemp.isChecked1() && pageNumTemp == 0)
@@ -3819,23 +3815,23 @@ public class MainController {
         }
         model.addAttribute("subCategoryInput", subCategoryInput);
         model.addAttribute("error", "");
-        //      勾選結果的初始化
+
         checkedResTemp = null;
-        //      跳轉到編輯子分類的頁面
+
         return "sub_category_edit";
     }
 
-    //  管理端的子分類編輯動作(提交)    
+    //  サブカテゴリー更新    
     @PostMapping("/sub_category_edit")
     public String subCategoryEditPost(@ModelAttribute("subCategoryInput") SubCategory subCategoryInput, Model model) {
-        //      勾選結果的初始化
+
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //      頁數的初始化
+        //      今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //      準備 選擇用的分類列表
+
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3844,43 +3840,44 @@ public class MainController {
         model.addAttribute("categoryList", categoryList);
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //      編輯子分類 並確認是否成功
         subCategoryInput.setId(subCategoryIdTemp);
+
+        //      サブカテゴリー更新
         SubCategoryAddResponse res = mainService.subCategoryEdit(subCategoryInput);
+        //      サブカテゴリー更新結果を確認
         if (res.getCode() != "200") {
             model.addAttribute("subCategoryInput", subCategoryInput);
             model.addAttribute("error", res.getMessage());
             return "sub_category_edit";
         }
-        //      更新 以前發布的新聞資料
+        //      サブカテゴリーのニュースを更新
         newsDao.updateNewsSubCategoryByOldSubCategory(subCategoryInput.getSubCategory(), oldSubCategoryTemp);
-        //      搜尋子分類 再傳到Thymeleaf
+        
         Page<SubCategory> subCategoryPage = null;
-        //      預設搜尋
+        //      サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //     分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //      跳轉到子分類的主頁
+        
         return "sub_category_home";
     }
 
-    //  管理端的子分類刪除動作
+    //  サブカテゴリーを削除
     @RequestMapping(value = "/sub_category_delete")
     public String SubCategoryDelete(Model model) {
-        //        勾選結果的初始化
+        
         CheckedRes checkedRes = new CheckedRes();
         model.addAttribute("checkedRes", checkedRes);
-        //        頁數的初始化
+        //        今のページをゼロに設定
         int pageNum = 0;
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("pageSize", pageSize);
-        //        準備 選擇用的分類列表
+        
         List<Category> res02 = categoryDao.findAll();
         List<String> categoryList = new ArrayList<>();
         for (Category item : res02) {
@@ -3889,23 +3886,22 @@ public class MainController {
         model.addAttribute("categoryList", categoryList);
         SubCategory subCategory = new SubCategory();
         model.addAttribute("subCategory", subCategory);
-        //        搜尋子分類 再傳到Thymeleaf
+
         Page<SubCategory> subCategoryPage = null;
-        //        預設搜尋
+        //        サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //       分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
         SubCategoryListTemp = subCategoryPage.getContent();
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //        未勾選 則返回子分類的主頁
+        //        チェックしてないを判断
         if (checkedResTemp == null)
             return "sub_category_home";
-        //        統計 勾選結果 再做刪除
+        //        チェックの結果を確認
         int[] checked = new int[100];
         for (int i = 0; i < 100; i++) {
             checked[i] = 0;
@@ -4179,22 +4175,21 @@ public class MainController {
             }
             counter++;
         }
-        //        搜尋子分類 再傳到Thymeleaf
+
         subCategoryPage = null;
-        //        預設搜尋
+        //        サブカテゴリーを検索
         if (subCategoryLastSearch == 0) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
-        //       分類搜尋
         if (subCategoryLastSearch == 1) {
             subCategoryPage = mainService.findSubCategoryPageByAll(sortDescFlag, pageNum, pageSize);
         }
         SubCategoryListTemp = subCategoryPage.getContent();
         model.addAttribute("subCategoryPage", subCategoryPage);
         model.addAttribute("subCategoryPageSize", subCategoryPage.getNumberOfElements());
-        //        勾選結果的初始化
+        
         checkedResTemp = null;
-        //        跳轉到子分類的主頁
+        
         return "sub_category_home";
     }
 
