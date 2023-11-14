@@ -11,66 +11,66 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface MainService {
-//  新聞預新增
+//  ニュース追加チェック
     public NewsAddResponse newsAddCheck(News news);
-//  新聞新增
+//  ニュース追加
     public NewsAddResponse newsAdd(NewsAddResponse newsAddResponse);
-//  分類新增
+//  カテゴリー追加
     public CategoryAddResponse categoryAdd(Category category);
-//  子分類新增
+//  サブカテゴリー追加
     public SubCategoryAddResponse subCategoryAdd(SubCategory subCategory);
-//  用分類找新聞
+//  カテゴリーでニュースを検索
     public Page<News> findPageByCategory(boolean sortDescFlag, int pageNum, int pageSize, String category);
-//  用分類找新聞
+//  カテゴリーでニュースを検索
     public List<News> findByCategory(String category);
-//  用子分類找新聞
+//  サブカテゴリーでニュースを検索
     public Page<News> findPageBySubCategory(boolean sortDescFlag, int pageNum, int pageSize, String subCategory);
-//  用子分類找新聞
+//  サブカテゴリーでニュースを検索
     public List<News> findBySubCategory(String subCategory);
-//  搜尋新聞(用分類+子分類)
+//  カテゴリーとサブカテゴリーでニュースを検索
     public List<News> findByCategoryAndSubCategory(String category, String subCategory);
-//  用新聞標題的關鍵字找新聞
+//  ニュースのタイルでニュースを検索
     public Page<News> findPageByNewsTitle(boolean sortDescFlag, int pageNum, int pageSize, String newsTitle);
-//  用新聞副標題的關鍵字找新聞
+//  ニュースのサブタイルでニュースを検索
     public Page<News> findPageByNewsSubTitle(boolean sortDescFlag, int pageNum, int pageSize, String newsSubTitle);
-//  用大於發布時間找新聞
+//  発表日以降でニュースを検索
     public Page<News> findPageByReleaseTimeGreater(boolean sortDescFlag, int pageNum, int pageSize, String date);
-//  用小於發布時間找新聞
+//  発表日以前でニュースを検索
     public Page<News> findPageByReleaseTimeLess(boolean sortDescFlag, int pageNum, int pageSize, String date);
-//  用複合條件找新聞
+//  複数条件でニュースを検索
     public Page<News> findPageByNewsByInput(boolean sortDescFlag, int pageNum, int pageSize, String Category, String SubCategory, String NewsTitle, String NewsSubTitle, String ReleaseTimeStart, String ReleaseTimeEnd, String BuildTimeStart, String BuildTimeEnd);
-//  找所有新聞(依照發布日 降冪排序)
+//  全てのニュースを検索
     public Page<News> findPageAll(boolean sortDescFlag, int pageNum, int pageSize);
-//  新聞預編輯
+//  ニュース更新チェック
     public NewsAddResponse newsEditCheck(News news);
-//  新聞編輯
+//  ニュース更新
     public NewsAddResponse newsEdit(NewsAddResponse newsAddResponse);
-//  刪除新聞
+//  ニュース削除
     public void newsDelete(int id);
     ///////////////////////////////////////////////
-//  搜尋所有分類
+//  全てのカテゴリーを検索
     public Page<Category> findCategoryPageByAll(boolean sortDescFlag, int pageNum, int pageSize);
-//  搜尋所有分類
+//  全てのカテゴリーを検索
     public List<Category> findCategoryByAll();
-//  分類編輯
+//  カテゴリー更新
     public CategoryAddResponse categoryEdit(Category category);
-//  分類編輯其新聞數量
+//  カテゴリーのニュースの数を更新
     public CategoryAddResponse categoryEditNewsCount(Category category);
-//  刪除分類
+//  カテゴリーを削除
     public void categoryDelete(int id);
     
     ///////////////////////////////////////////////
-//  搜尋所有子分類
+//  全てのサブカテゴリーを検索
     public Page<SubCategory> findSubCategoryPageByAll(boolean sortDescFlag, int pageNum, int pageSize);
-//  搜尋所有子分類(用分類)
+//  カテゴリーでサブカテゴリーを検索
     public Page<SubCategory> findSubCategoryPageByCategory(boolean sortDescFlag, int pageNum, int pageSize, String category);
-//  搜尋所有子分類(用分類)
+//  カテゴリーでサブカテゴリーを検索
     public List<SubCategory> findSubCategoryByCategory(String category);
-//  子分類編輯
+//  サブカテゴリー更新
     public SubCategoryAddResponse subCategoryEdit(SubCategory subCategory);
-//  更新子分類的新聞數量
+//  サブカテゴリーのニュースの数を更新
     public SubCategoryAddResponse subCategoryEditNewsCount(SubCategory subCategory);
-//  刪除子分類
+//  サブカテゴリーを削除
     public void subCategoryDelete(int id);
     
     

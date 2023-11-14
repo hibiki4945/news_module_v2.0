@@ -12,17 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface SubCategoryDao extends JpaRepository<SubCategory, Integer>{
-//  判斷 分類是否存在
+//  カテゴリーがあるかどうかを判断する
     public boolean existsByCategory(String category);
-//  用分類搜尋子分類
+//  カテゴリーでニュースを検索
     public List<SubCategory> findByCategory(String category);
-//  用分類搜尋子分類
+//  カテゴリーでニュースを検索
     public Page<SubCategory> findByCategory(Pageable pageable, String category);
-//  判斷子分類是否已存在(用子分類)
+//  サブカテゴリーがあるかどうかを判断する
     public boolean existsBySubCategory(String subCategory);
-//  判斷子分類是否已存在(用分類+子分類)    
+//  カテゴリーとサブカテゴリーがあるかどうかを判断する 
     public boolean existsByCategoryAndSubCategory(String category, String subCategory);
-//  更新 子分類
+//  サブカテゴリーを更新する
     @Modifying
     @Transactional
     @Query(value = "update sub_category s"
@@ -33,7 +33,7 @@ public interface SubCategoryDao extends JpaRepository<SubCategory, Integer>{
                               @Param("inputCategory") String category,
                               @Param("inputSubCategory") String subCategory
                               );
-//  更新 子分類(包括 子分類的新聞數量)
+//  ニュースの数を更新する
     @Modifying
     @Transactional
     @Query(value = "update sub_category s"
@@ -46,14 +46,12 @@ public interface SubCategoryDao extends JpaRepository<SubCategory, Integer>{
                               @Param("inputSubCategory") String subCategory,
                               @Param("inputSubCategoryNewsCount") int NewsCount
                               );
-//  分類更新時 更新以前新增的該分類下的子分類的分類
+//  既存のニュースのサブカテゴリーを更新する
     @Modifying
     @Transactional
     @Query(value = "update sub_category s"
             + " set s.category = :inputCategory "
             + " where s.category = :inputOldCategory ", nativeQuery = true)
     public int updateSubCategoryCategoryByOldCategory(@Param("inputCategory") String category, @Param("inputOldCategory") String oldCategory);
-//  用id 刪除子分類
-//    public int deleteById(int id);
     
 }

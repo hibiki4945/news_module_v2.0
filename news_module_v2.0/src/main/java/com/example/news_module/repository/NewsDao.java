@@ -14,41 +14,41 @@ import java.util.List;
 
 @Repository
 public interface NewsDao extends JpaRepository<News, Integer>{
-//  コンテンツでニュースが既にあるかどうかを判断する。
+//  コンテンツでニュースが既にあるかどうかを判断
     public boolean existsByContent(String content);
-//  用內文 刪除新聞
+//  コンテンツでニュースを削除
     public int removeByContent(String content);
-//  搜尋新聞(用分類)
+//  カテゴリーでニュースを検索
     public List<News> findByCategory(String category);
-//  搜尋新聞(用子分類)
+//  サブカテゴリーでニュースを検索
     public List<News> findBySubCategory(String subCategory);
-//  搜尋新聞(用分類+子分類)    
+//  カテゴリーとサブカテゴリーでニュースを検索    
     public List<News> findByCategoryAndSubCategory(String category, String subCategory);
-//  搜尋新聞(用分類)
+//  カテゴリーでニュースを検索
     public Page<News> findByCategory(Pageable pageable, String category);
-//  搜尋新聞(用子分類)
+//  サブカテゴリーでニュースを検索
     public Page<News> findBySubCategory(Pageable pageable, String subCategory);
-//  搜尋新聞(用新聞標題的關鍵字)
+//  ニュースタイルでニュースを検索
     @Query(value = "select * from news where news_title like concat ('%', :keyword, '%')", nativeQuery = true)
     public List<News> findByNewsTitle(@Param("keyword")String str);
-//  搜尋新聞(用新聞標題的關鍵字)
+//  ニュースタイルでニュースを検索
     @Query(value = "select * from news where news_title like concat ('%', :keyword, '%')", nativeQuery = true)
     public Page<News> findByNewsTitle(Pageable pageable, @Param("keyword")String str);
-//  搜尋新聞(用新聞副標題的關鍵字)
+//  ニュースタイルのサブタイルでニュースを検索
     @Query(value = "select * from news where news_sub_title like concat ('%', :keyword, '%')", nativeQuery = true)
     public List<News> findByNewsSubTitle(@Param("keyword")String str);
-//  搜尋新聞(用新聞副標題的關鍵字)
+//  ニュースタイルのサブタイルでニュースを検索
     @Query(value = "select * from news where news_sub_title like concat ('%', :keyword, '%')", nativeQuery = true)
     public Page<News> findByNewsSubTitle(Pageable pageable, @Param("keyword")String str);
-//  搜尋新聞(用大於發布時間)
+//  発表日以降でニュースを検索
     public List<News> findByReleaseTimeGreaterThanEqual(String date);
-//  搜尋新聞(用大於發布時間)    
+//  発表日以降でニュースを検索    
     public Page<News> findByReleaseTimeGreaterThanEqual(Pageable pageable, String date);
-//  搜尋新聞(用小於發布時間)
+//  発表日以前でニュースを検索
     public List<News> findByReleaseTimeLessThanEqual(String date);
-//  搜尋新聞(用小於發布時間)    
+//  発表日以前でニュースを検索  
     public Page<News> findByReleaseTimeLessThanEqual(Pageable pageable, String date);
-//  更新新聞
+//  ニュースを更新する
     @Modifying
     @Transactional
     @Query(value = "update news n"
@@ -67,23 +67,21 @@ public interface NewsDao extends JpaRepository<News, Integer>{
                               @Param("inputReleaseTime") String newsReleaseTime,
                               @Param("inputContent") String content
                               );
-//  分類更新時 更新以前發布的新聞的分類
+//  既存のニュースのカテゴリーを更新する
     @Modifying
     @Transactional
     @Query(value = "update news n"
             + " set n.category = :inputCategory "
             + " where n.category = :inputOldCategory ", nativeQuery = true)
     public int updateNewsCategoryByOldCategory(@Param("inputCategory") String category, @Param("inputOldCategory") String oldCategory);
-//  子分類更新時 更新以前發布的新聞的子分類
+//  既存のニュースのサブカテゴリーを更新する
     @Modifying
     @Transactional
     @Query(value = "update news n"
             + " set n.sub_category = :inputSubCategory "
             + " where n.sub_category = :inputOldSubCategory ", nativeQuery = true)
     public int updateNewsSubCategoryByOldSubCategory(@Param("inputSubCategory") String subCategory, @Param("inputOldSubCategory") String oldSubCategory);
-//  用id 刪除新聞
-//    public int deleteById(int id);
-//  搜尋新聞(複合條件)
+//  複数条件でニュースを検索
     @Query(value = "SELECT * FROM `news` where "
             + " category = case when :categoryInput is null then category else :categoryInput end and "
             + " sub_category like case when :subCategoryInput is null then '%%' else concat('%',:subCategoryInput,'%') end and "
@@ -105,7 +103,7 @@ public interface NewsDao extends JpaRepository<News, Integer>{
             @Param("buildTimeStartInput") String buildTimeStartInput,
             @Param("buildTimeEndInput") String buildTimeEndInput
             );
-//  搜尋新聞(用大於發布時間)    
+//  全てのニュースを検索    
     public Page<News> findAll(Pageable pageable);
 
 }
