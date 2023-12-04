@@ -2,26 +2,26 @@ package com.example.news_module.constants;
 
 public enum RtnCode {
 
-    SUCCESSFUL("200", "successful!"),
-    DATA_EMPTY_ERROR("400", "data empty error!"),
-    CATEGORY_EMPTY_ERROR("400", "category empty error!"),
-    SUB_CATEGORY_EMPTY_ERROR("400", "sub category empty error!"),
-    NEWS_TITLE_EMPTY_ERROR("400", "news title empty error!"),
-    NEWS_SUB_TITLE_EMPTY_ERROR("400", "news sub title empty error!"),
-    RELEASE_TIME_FORMAT_ERROR("400", "release time format error!"),
-    CONTENT_EMPTY_ERROR("400", "content empty error!"),
-    NEWS_EXISTS_ERROR("400", "news exists error!"),
-    DAO_ERROR("400", "dao error!"),
-    DATA_ERROR("400", "data error!"),
-    CATEGORY_EXISTS_ERROR("400", "category exists error!"),
-    SUB_CATEGORY_EXISTS_ERROR("400", "sub category exists error!"),
-    CATEGORY_NOT_EXISTS_ERROR("400", "category not exists error!"),
-    NEWS_TITLE_OVER_LENGTH_ERROR("400", "news title over length error!"),
-    NEWS_SUB_TITLE_OVER_LENGTH_ERROR("400", "news sub title over length error!"),
-    CONTENT_OVER_LENGTH_ERROR("400", "content over length error!"),
-    CATEGORY_OVER_LENGTH_ERROR("400", "category over length error!"),
-    SUB_CATEGORY_OVER_LENGTH_ERROR("400", "sub category over length error!"),
-    NO_CHANGE_ERROR("400", "no change error!");
+    SUCCESSFUL("200", "成功しました"),
+    DATA_EMPTY_ERROR("400", "データがない"),
+    CATEGORY_EMPTY_ERROR("400", "カテゴリーがない"),
+    SUB_CATEGORY_EMPTY_ERROR("400", "サブカテゴリーがない"),
+    NEWS_TITLE_EMPTY_ERROR("400", "ニュースタイトルがない"),
+    NEWS_SUB_TITLE_EMPTY_ERROR("400", "ニュースのサブタイトルがない"),
+    RELEASE_TIME_FORMAT_ERROR("400", "発表日の仕様が合わない"),
+    CONTENT_EMPTY_ERROR("400", "コンテンツがない"),
+    NEWS_EXISTS_ERROR("400", "ニュースが既に存在している"),
+    DAO_ERROR("400", "不明な問題が発生"),
+    DATA_ERROR("400", "データエラー"),
+    CATEGORY_EXISTS_ERROR("400", "カテゴリーが既に存在している"),
+    SUB_CATEGORY_EXISTS_ERROR("400", "サブカテゴリーが既に存在している"),
+    CATEGORY_NOT_EXISTS_ERROR("400", "カテゴリーは存在しない"),
+    NEWS_TITLE_OVER_LENGTH_ERROR("400", "ニュースタイトルが長さ制限を超えた"),
+    NEWS_SUB_TITLE_OVER_LENGTH_ERROR("400", "ニュースのサブタイトルが長さ制限を超えた"),
+    CONTENT_OVER_LENGTH_ERROR("400", "コンテンツが長さ制限を超えた"),
+    CATEGORY_OVER_LENGTH_ERROR("400", "カテゴリーが長さ制限を超えた"),
+    SUB_CATEGORY_OVER_LENGTH_ERROR("400", "サブカテゴリが長さ制限を超えた"),
+    NO_CHANGE_ERROR("400", "改変はしなかった");
     
     private String code;
     

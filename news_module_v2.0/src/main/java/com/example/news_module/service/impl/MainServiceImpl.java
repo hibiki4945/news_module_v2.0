@@ -81,7 +81,7 @@ public class MainServiceImpl implements MainService {
             return new NewsAddResponse(RtnCode.NEWS_EXISTS_ERROR.getCode(), RtnCode.NEWS_EXISTS_ERROR.getMessage(), null);
         }
 
-        //      今の時刻を獲得
+        //      今の日付を獲得
         Date date = new Date();
         //      BuildTimeに設定
         news.setBuildTime(date);
@@ -124,7 +124,7 @@ public class MainServiceImpl implements MainService {
             return new CategoryAddResponse(RtnCode.CATEGORY_EXISTS_ERROR.getCode(), RtnCode.CATEGORY_EXISTS_ERROR.getMessage(), null);
         }
 
-        //      今の時刻を獲得
+        //      今の日付を獲得
         Date date = new Date();
         //      BuildTimeに設定
         category.setBuildTime(date);
@@ -170,7 +170,7 @@ public class MainServiceImpl implements MainService {
             return new SubCategoryAddResponse(RtnCode.SUB_CATEGORY_EXISTS_ERROR.getCode(), RtnCode.SUB_CATEGORY_EXISTS_ERROR.getMessage(), null);
         }
 
-        //      今の時刻を獲得
+        //      今の日付を獲得
         Date date = new Date();
         //      BuildTimeに設定
         subCategory.setBuildTime(date);
@@ -352,7 +352,7 @@ public class MainServiceImpl implements MainService {
             return new NewsAddResponse(RtnCode.CONTENT_OVER_LENGTH_ERROR.getCode(), RtnCode.CONTENT_OVER_LENGTH_ERROR.getMessage(), null);
         }
 
-        // 今の時刻を獲得
+        // 今の日付を獲得
         Date date = new Date();
         //      BuildTimeに設定
         news.setBuildTime(date);
@@ -367,7 +367,6 @@ public class MainServiceImpl implements MainService {
 
         try {
             //          ニュース更新
-            //            News res = newsDao.save(newsAddResponse.getNews());
             int res = newsDao.updateNewsById(newsAddResponse.getNews().getId(), newsAddResponse.getNews().getCategory(), newsAddResponse.getNews().getSubCategory(),
                     newsAddResponse.getNews().getNewsTitle(), newsAddResponse.getNews().getNewsSubTitle(), newsAddResponse.getNews().getReleaseTime(),
                     newsAddResponse.getNews().getContent());
