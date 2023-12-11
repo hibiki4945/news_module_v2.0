@@ -35,20 +35,20 @@ public class MainServiceImpl implements MainService {
     @Override
     public NewsAddResponse newsAddCheck(News news) {
 
-        //      引数がヌルのチェック
-        if (news == null) {
-            return new NewsAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
-        }
-        //      カテゴリーがヌルのチェック
-        if (news.getCategory().isBlank()) {
-            return new NewsAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
-        }
+//        //      引数がヌルのチェック
+//        if (news == null) {
+//            return new NewsAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
+//        }
+//        //      カテゴリーがヌルのチェック
+//        if (news.getCategory() == null || news.getCategory().isBlank()) {
+//            return new NewsAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
+//        }
         //      サブカテゴリーがヌルのチェック
-        if (news.getSubCategory().isBlank()) {
+        if (news.getSubCategory() == null || news.getSubCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
         //      ニュースタイルがヌルのチェック
-        if (news.getNewsTitle().isBlank()) {
+        if (news.getNewsTitle() == null || news.getNewsTitle().isBlank()) {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage(), null);
         }
         //      ニュースタイルの長さチェック
@@ -68,7 +68,7 @@ public class MainServiceImpl implements MainService {
             return new NewsAddResponse(RtnCode.RELEASE_TIME_FORMAT_ERROR.getCode(), RtnCode.RELEASE_TIME_FORMAT_ERROR.getMessage(), null);
         }
         //      コンテンツがヌルのチェック
-        if (news.getContent().isBlank()) {
+        if (news.getContent() == null || news.getContent().isBlank()) {
             return new NewsAddResponse(RtnCode.CONTENT_EMPTY_ERROR.getCode(), RtnCode.CONTENT_EMPTY_ERROR.getMessage(), null);
         }
         //      コンテンツの長さチェック
@@ -94,13 +94,13 @@ public class MainServiceImpl implements MainService {
     @Override
     public NewsAddResponse newsAdd(NewsAddResponse newsAddResponse) {
 
-        try {
+//        try {
             //          ニュースを更新
             News res = newsDao.save(newsAddResponse.getNews());
             return new NewsAddResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), newsAddResponse.getNews());
-        } catch (Exception e) {
-            return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
-        }
+//        } catch (Exception e) {
+//            return new NewsAddResponse(RtnCode.DAO_ERROR.getCode(), RtnCode.DAO_ERROR.getMessage(), null);
+//        }
     }
 
     //  カテゴリー追加
@@ -316,15 +316,15 @@ public class MainServiceImpl implements MainService {
             return new NewsAddResponse(RtnCode.DATA_EMPTY_ERROR.getCode(), RtnCode.DATA_EMPTY_ERROR.getMessage(), null);
         }
         //      カテゴリーがヌルのチェック
-        if (news.getCategory().isBlank()) {
+        if (news.getCategory() == null || news.getCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.CATEGORY_EMPTY_ERROR.getCode(), RtnCode.CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
         //      サブカテゴリーがヌルのチェック
-        if (news.getSubCategory().isBlank()) {
+        if (news.getSubCategory() == null || news.getSubCategory().isBlank()) {
             return new NewsAddResponse(RtnCode.SUB_CATEGORY_EMPTY_ERROR.getCode(), RtnCode.SUB_CATEGORY_EMPTY_ERROR.getMessage(), null);
         }
         //      ニュースのタイルがヌルのチェック
-        if (news.getNewsTitle().isBlank()) {
+        if (news.getNewsTitle() == null || news.getNewsTitle().isBlank()) {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_TITLE_EMPTY_ERROR.getMessage(), null);
         }
         //      ニュースのタイルの長さチェック
@@ -332,7 +332,7 @@ public class MainServiceImpl implements MainService {
             return new NewsAddResponse(RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getCode(), RtnCode.NEWS_TITLE_OVER_LENGTH_ERROR.getMessage(), null);
         }
         //      ニュースのサブタイルがヌルのチェック
-        if (news.getNewsSubTitle().isBlank()) {
+        if (news.getNewsSubTitle() == null || news.getNewsSubTitle().isBlank()) {
             return new NewsAddResponse(RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getCode(), RtnCode.NEWS_SUB_TITLE_EMPTY_ERROR.getMessage(), null);
         }
         //      ニュースのサブタイルがヌルのチェック
@@ -344,7 +344,7 @@ public class MainServiceImpl implements MainService {
             return new NewsAddResponse(RtnCode.RELEASE_TIME_FORMAT_ERROR.getCode(), RtnCode.RELEASE_TIME_FORMAT_ERROR.getMessage(), null);
         }
         //      コンテンツがヌルのチェック
-        if (news.getContent().isBlank()) {
+        if (news.getContent() == null || news.getContent().isBlank()) {
             return new NewsAddResponse(RtnCode.CONTENT_EMPTY_ERROR.getCode(), RtnCode.CONTENT_EMPTY_ERROR.getMessage(), null);
         }
         //      コンテンツの長さチェック
